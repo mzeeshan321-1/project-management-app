@@ -16,11 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('tanent_id')->constrained('tanents')->onDelete('cascade');
             $table->timestamp('last_login')->nullable();
-            $table->string('contact info')->nullable();
-            $table->string('address')->nullable();
+
             $table->string('specialization')->nullable();
             $table->string('skills')->nullable();
-            $table->enum('status', ['active', 'inactive', 'suspended', 'onboard'])->default('active');
+            
             $table->timestamps();
         });
     }

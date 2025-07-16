@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
             $table->foreignid('tanent_id')->constrained('tanents')->onDelete('cascade');
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->date('due_date')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            $table->timestamp('completed_at')->nullable();
-            $table->enum('status', ['pending', 'in_progress', 'completed', 'on_hold', 'cancelled'])->default('pending');
+            $table->enum('type', ['debit', 'credit','return']);
+            $table->integer('amount');
 
-            $table->enum('priority', ['low', 'medium', 'high'])->default('low');
+            $table->string('upload_invoice');
+            $table->text('note')->nullable();
+            $table->enum('status', ['pending', 'received', 'retuned'])->default('received');
+
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('payments');
     }
 };
