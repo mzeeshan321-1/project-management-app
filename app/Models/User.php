@@ -13,6 +13,21 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
+    public function tanent()
+    {
+         return $this->hasOne(Tanent::class, 'user_id');
+    }
+
+    public function expert()
+    {
+        return $this->hasOne(Expert::class, 'user_id');
+    }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'user_id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,6 +39,7 @@ class User extends Authenticatable
         'contact',
         'address',
         'email',
+        'last_login',
         'password',
         'status',
         'image',

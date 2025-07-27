@@ -6,5 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tanent extends Model
 {
-    //
+
+    protected $fillable = [
+        'user_id',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function experts()
+    {
+        return $this->hasMany(Expert::class, 'tanent_id');
+    }
+
+    public function clients()
+    {
+        return $this->hasMany(Client::class, 'tanent_id');
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'tanent_id');
+
+    }
+
 }

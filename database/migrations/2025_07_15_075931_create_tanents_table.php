@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('tanents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->timestamp('last_login')->nullable();
-            
             $table->timestamps();
         });
     }

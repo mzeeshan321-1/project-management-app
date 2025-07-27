@@ -14,7 +14,7 @@ class RolePermissionSeeder extends Seeder
     private array $allPermissions = [
         // General permissions
         'view middleman',
-        'manage middlemans',
+        'manage middleman',
 
         'view reports',
         'manage reports',
@@ -69,24 +69,29 @@ class RolePermissionSeeder extends Seeder
     // Role-permission mapping
     private array $rolePermissions = [
         'super-admin' => [
+            // Middleman permissions
             'view middleman',
-            'manage middlemans',
+            'manage middleman',
+
+            // Reports permissions
             'view reports',
             'manage reports',
 
+            // Settings permissions
             'view settings',
             'manage settings',
             
+            // User & Profile permissions
             'view users',
             'view profile',
             'manage profile',
 
-            // Transactions and payments
+            // Payments permissions
             'view payments', 
             'manage payments',
             'create payments',
 
-            // Expenses
+            // Expenses permissions
             'view expenses', 
             'manage expenses',
 
@@ -99,74 +104,101 @@ class RolePermissionSeeder extends Seeder
             // Expert permissions
             'manage experts',
 
+            // Project permissions
             'view projects',
             'manage projects', 
+            'assign projects',
 
+            // Task permissions
             'view tasks', 
             'manage tasks', 
 
-            'assign projects',
-
+            //Settings permissions
             'view settings',
             'manage settings',
             
+            // User permissions
             'view users',
 
+            // Profile permissions
             'view profile',
             'manage profile',
 
+            // Files permissions
             'update project status',
             'upload project deliverables',
             'manage project deliverables',
 
-            // Transactions and payments
+            // Payments permissions
             'view payments', 
             'manage payments',
             'create payments',
 
-            // Expenses
+            // Expenses permissions
             'view expenses', 
             'manage expenses',
             
+            // User Status permissions
             'update availability',
 
         ],
 
         'expert' => [
+            // Middleman permissions
             'view middleman',
+
+            // Project and task permissions
             'view projects',
             'view tasks', 
             'update tasks status',
             
+            // Files permissions
             'upload project deliverables',
             'manage project deliverables',
             'update project status',
 
+            // payments permissions
             'view payments', 
+
+            // User Status permissions
             'update availability',
-            
+
+            // Settings permissions
+            'view settings',
+
+            // Profile permissions
+            'view profile',
         ],
 
         'client' => [
+            // Middleman permissions
             'view middleman',
+            
+            // Files permissions
             'update project deliverables',
 
+            // Project and task permissions
+            'request new projects', 
             'view projects',
-            'view tasks', 
+            // 'view tasks', -----------
 
+            // Settings permissions
             'view settings',
-            // Transactions and payments
-            'view payments', 
+
+            // Payments permissions
+            'view payments',
             'manage payments',
             'create payments',
 
-            // Expenses
+            // Expenses permissions
             'view expenses', 
             'manage expenses',
 
+            // Expert permissions
             'rate experts',
-            'request new projects', 
-           
+
+            // Profile permissions
+            'view profile',
         ],
     ];
 

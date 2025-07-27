@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('title')
-    <title>Dashboard - Super Admin</title>
+    @role('super-admin') <title>Dashboard - Super Admin</title> @endrole
+    @role('middleman') <title>Dashboard - Tanent</title> @endrole
+    @role('expert') <title>Dashboard - Expert</title> @endrole
+    @role('client') <title>Dashboard - Client</title> @endrole
+@endsection
 
 @section('content')
         <div class="pagetitle">

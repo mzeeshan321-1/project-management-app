@@ -28,15 +28,21 @@ class AuthenticatedSessionController extends Controller
         try {
             $request->authenticate();
             $request->session()->regenerate();
+
+            // Update last login
+            $user = Auth::user();
+            $user->update([
+                'last_login' => now()
+            ]);
+
             flash()->options([
                 'timeout' => 3000,
-                'position' => 'bottom-right',
-            ])->success('Login successful! Welcome back.');
+                'position' => 'bottom-center',
+            ])->success('Login successful! Welcome back: ' . $user->first_name . '.');
 
             return redirect()->intended(route('dashboard', absolute: false));
-
         } catch (\Exception $e) {
-            flash()->error('Invalid credentials: Incorrect email or password!.');
+            flash()->error('Login failed: ' . $e->getMessage());
             return redirect()->back();
         }
     }
@@ -51,7 +57,11 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-        flash()->success('You have been logged out successfully.');
+
+        flash()->options([
+            'timeout' => 3000,
+            'position' => 'bottom-center',
+        ])->success('You have been logged out successfully.');
         return redirect('/');
     }
 }

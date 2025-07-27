@@ -14,16 +14,13 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tanent_id')->constrained('tanents')->onDelete('cascade');
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            $table->foreignId('client_id')->nullable()->constrained('clients')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->date('start_date')->nullable();
             $table->date('deadline')->nullable();
             $table->integer('budget');
-            
-            
             $table->enum('status', ['in_progress', 'completed', 'inactive', 'cancelled'])->default('inactive');
-
             $table->timestamps();
         });
     }

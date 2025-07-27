@@ -52,9 +52,9 @@
 
                                     <div class="col-12">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="remember"
+                                            <input class="form-check-input text-muted" type="checkbox" name="remember"
                                                 id="remember_me">
-                                            <label class="form-check-label" for="remember_me">Remember me</label>
+                                            <label class="form-check-label text-muted" for="remember_me">Remember me</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
