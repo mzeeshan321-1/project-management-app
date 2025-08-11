@@ -8,6 +8,7 @@ use App\Models\ProjectAssign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ProjectsController;
 
 class ProjectAssignmentController extends Controller
 {
@@ -64,6 +65,9 @@ class ProjectAssignmentController extends Controller
                 'budget' => $request->budget,
             ]);
 
+            $projectsController = new ProjectsController();
+            $projectsController->calculateProfit('');
+
             flash()->options([
                 'timeout' => 3000,
                 'position' => 'bottom-center',
@@ -119,7 +123,7 @@ class ProjectAssignmentController extends Controller
             return redirect()->back();
         }
 
-         $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'project_id' => 'required|exists:projects,id',
             'expert_id' => 'required|exists:experts,id',
             'note' => 'nullable|string|max:1000',

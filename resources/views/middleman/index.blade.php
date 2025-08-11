@@ -80,15 +80,15 @@
                                                     {{ $tanent->user->last_login ? \Carbon\Carbon::parse($tanent->user->last_login)->format('Y-m-d') : 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    @if ($expert->user->status == 'active')
+                                                    @if ($tanent->user->status == 'active')
                                                         <span
-                                                            class="badge bg-success">{{ strtoupper($expert->user->status) }}</span>
-                                                    @elseif ($expert->user->status == 'inactive')
+                                                            class="badge bg-success">{{ strtoupper($tanent->user->status) }}</span>
+                                                    @elseif ($tanent->user->status == 'inactive')
                                                         <span
-                                                            class="badge bg-danger">{{ strtoupper($expert->user->status) }}</span>
-                                                    @elseif ($expert->user->status == 'suspended')
+                                                            class="badge bg-danger">{{ strtoupper($tanent->user->status) }}</span>
+                                                    @elseif ($tanent->user->status == 'suspended')
                                                         <span
-                                                            class="badge bg-danger">{{ strtoupper($expert->user->status) }}</span>
+                                                            class="badge bg-danger">{{ strtoupper($tanent->user->status) }}</span>
                                                     @endif
                                                 </td>
                                                 @can('manage middleman')

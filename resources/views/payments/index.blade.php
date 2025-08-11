@@ -1,103 +1,95 @@
 @extends('layouts.app')
 
 @section('title')
-    <title>Tasks</title>
+    <title>Payments</title>
 @endsection
 
 @section('content')
     <div class="pagetitle">
-        <h1>Tasks</h1>
+        <h1>Payments</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item active">Tasks</li>
+                <li class="breadcrumb-item active">Payments</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    {{-- {{ dd($tasks) }} --}}
+    {{-- {{ dd($payments) }} --}}
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title">Tasks Details</h5>
-                            <div class="col text-end" title="Create Tasks">
-                                <a href="{{ route('tasks.create') }}" class="btn btn-primary">
-                                    <i class="ri-add-fill"></i> Create Tasks
-                                </a>
-                            </div>
+                            <h5 class="card-title">Payments Detailed List</h5>
+                            @can('manage payments')
+                                <div class="col text-end" title="Create Payments">
+                                    <a href="{{ route('payments.create') }}" class="btn btn-primary">
+                                        <i class="ri-add-fill"></i> Create Payments
+                                    </a>
+                                </div>
+                            @endcan
                         </div>
                         <!-- Table with centered content -->
                         <div class="table-responsive">
                             <table class="table datatable text-nowrap">
                                 <thead>
                                     <tr class="text-center">
-                                        <th class="text-center align-middle">T.ID</th>
+                                        <th class="text-center align-middle">P.ID</th>
                                         <th class="text-center align-middle">Project</th>
-                                        <th class="text-center align-middle">Title</th>
-                                        <th class="text-center align-middle">Description</th>
-                                        <th class="text-center align-middle">Due Date</th>
-                                        <th class="text-center align-middle">Completed At</th>
-                                        <th class="text-center align-middle">priority</th>
+                                        <th class="align-middle">Send To</th>
+                                        <th class="text-center align-middle">Amount</th>
+                                        <th class="text-center align-middle">Note</th>
+                                        {{-- <th class="text-center align-middle">Invoice</th> --}}
+                                        <th class="text-center align-middle">Type</th>
                                         <th class="text-center align-middle">Status</th>
                                         <th class="text-center align-middle">Action</th>
                                     </tr>
                                 </thead>
-                                @if ($tasks->isNotEmpty())
+                                @if ($payments->isNotEmpty())
                                     <tbody>
-                                        @foreach ($tasks as $task)
+                                        @foreach ($payments as $payment)
                                             <tr>
-                                                <td class="text-center align-middle">{{ $task->id }}</td>
-                                                <td class="align-middle">{{ $task->project->title }}</td>
-                                                <td class="text-center align-middle">{{ $task->title }}
-                                                </td>
-                                                <td class="text-center align-middle">{{ $task->description ?? 'N/A' }}</td>
+                                                <td class="text-center align-middle">{{ $payment->id }}</td>
+                                                <td class="text-center align-middle">{{ $payment->project->title }}</td>
                                                 <td class="text-center align-middle">
-                                                    {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->diffForHumans() : 'N/A' }}
+                                                    {{ $payment->receiver ? $payment->receiver->first_name . ' ' . $payment->receiver->last_name : 'N/A' }}</td>
+                                                <td class="text-center align-middle">{{ $payment->amount ?? 'N/A' }}
                                                 </td>
+                                                {{-- <td class="text-center align-middle">{{ $payment->upload_invoice ?? 'N/A' }}</td> --}}
+                                                <td class="text-center align-middle">{{ $payment->note ?? 'N/A' }}</td>
                                                 <td class="text-center align-middle">
-                                                    {{ $task->completed_at ? \Carbon\Carbon::parse($task->completed_at)->diffForHumans() : 'N/A' }}
-                                                </td>
-                                                <td class="text-center align-middle">
-                                                    @if ($task->priority == 'low')
+                                                    @if ($payment->type == 'debit')
                                                         <span
-                                                            class="badge bg-secondary">{{ strtoupper($task->priority) }}</span>
-                                                    @elseif ($task->priority == 'medium')
+                                                            class="badge bg-info">{{ strtoupper($payment->type) }}</span>
+                                                    @elseif ($payment->type == 'credit')
                                                         <span
-                                                            class="badge bg-success">{{ strtoupper($task->priority) }}</span>
-                                                    @elseif ($task->priority == 'high')
+                                                            class="badge bg-success">{{ strtoupper($payment->type) }}</span>
+                                                    @elseif ($payment->type == 'return')
                                                         <span
-                                                            class="badge bg-danger">{{ strtoupper($task->priority) }}</span>
+                                                            class="badge bg-secondary">{{ strtoupper($payment->type) }}</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    @if ($task->status == 'pending')
+                                                    @if ($payment->status == 'pending')
                                                         <span
-                                                            class="badge bg-info">{{ strtoupper($task->status) }}</span>
-                                                    @elseif ($task->status == 'completed')
+                                                            class="badge bg-secondary">{{ strtoupper($payment->status) }}</span>
+                                                    @elseif ($payment->status == 'received')
                                                         <span
-                                                            class="badge bg-success">{{ strtoupper($task->status) }}</span>
-                                                    @elseif ($task->status == 'in_progress')
+                                                            class="badge bg-success">{{ strtoupper($payment->status) }}</span>
+                                                    @elseif ($payment->status == 'returned')
                                                         <span
-                                                            class="badge bg-secondary">{{ strtoupper($task->status) }}</span>
-                                                    @elseif ($task->status == 'cancelled')
-                                                        <span
-                                                            class="badge bg-danger">{{ strtoupper($task->status) }}</span>
-                                                    @elseif ($task->status == 'on_hold')
-                                                        <span
-                                                            class="badge bg-dark">{{ strtoupper($task->status) }}</span>
+                                                            class="badge bg-danger">{{ strtoupper($payment->status) }}</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex justify-content-center">
-                                                        <a href="{{ route('tasks.edit', $task->id) }}"
+                                                        <a href="{{ route('payments.edit', $payment->id) }}"
                                                             class="btn btn-light btn-sm text-primary mx-1" title="Edit">
                                                             <i class="ri-edit-line"></i>
                                                         </a>
-                                                        @if (Route::has('tasks.delete'))
-                                                            <form
-                                                                action="{{ route('tasks.delete', $task->id) }}"
+                                                        @if (Route::has('payments.delete'))
+                                                            <form action="{{ route('payments.delete', $payment->id) }}"
                                                                 method="POST" class="d-inline">
                                                                 @csrf
                                                                 @method('DELETE')

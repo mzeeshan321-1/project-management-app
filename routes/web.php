@@ -3,7 +3,10 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpertsController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\ProfitReportsController;
 use App\Http\Controllers\TasksController;
+use App\Http\Controllers\FilesController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\ProjectAssignmentController;
 use App\Http\Controllers\MiddlemanController;
@@ -25,6 +28,29 @@ Route::middleware('auth')->group(function () {
     // task view Route
     Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
 
+    // Payments Routes
+    Route::get('/payments', [PaymentsController::class, 'index'])->name('payments.index');
+    Route::get('/payments/create', [PaymentsController::class, 'create'])->name('payments.create');
+    Route::post('/payments', [PaymentsController::class, 'store'])->name('payments.store');
+    Route::get('/payments/{id}/edit', [PaymentsController::class, 'edit'])->name('payments.edit');
+    Route::put('/payments/{id}', [PaymentsController::class, 'update'])->name('payments.update');
+    Route::delete('/payments/{id}', [PaymentsController::class, 'destroy'])->name('payments.delete');
+
+    // Files Routes
+    Route::get('/files', [FilesController::class, 'index'])->name('files.index');
+    Route::get('/files/create', [FilesController::class, 'create'])->name('files.create');
+    Route::post('/files', [FilesController::class, 'store'])->name('files.store');
+    Route::get('/files/{id}/edit', [FilesController::class, 'edit'])->name('files.edit');
+    Route::put('/files/{id}', [FilesController::class, 'update'])->name('files.update');
+    Route::delete('/files/{id}', [FilesController::class, 'destroy'])->name('files.delete');
+
+    // Profit Reports Routes
+    Route::get('/profit_reports', [ProfitReportsController::class, 'index'])->name('profits.index');
+    Route::get('/profit_reports/show/{profit}', [ProfitReportsController::class, 'show'])->name('profits.show');
+    Route::post('/profit_reports/calculate/{project}/{payment}', [ProfitReportsController::class, 'calculateProfit'])->name('profits.calculate');
+    Route::delete('/profit_reports/{id}', [ProfitReportsController::class, 'destroy'])->name('profits.delete');
+
+
     // Super Admin Role Routes
     Route::middleware(['role:super-admin'])->group(function () {
 
@@ -36,6 +62,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/middleman/{id}', [MiddlemanController::class, 'destroy'])->name('middleman.delete');
 
     });
+
+    Route::get('projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
 
     // Middleman Role Routes
     Route::middleware(['role:middleman'])->group(function () {
@@ -62,6 +90,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit');
         Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
         Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.delete');
+        Route::patch('/projects/{id}/status', [ProjectsController::class, 'updateStatus'])->name('projects.updateStatus');
+
 
         // Project Assignment Routes
         Route::get('/project-assignments', [ProjectAssignmentController::class, 'index'])->name('project_assignments.index');

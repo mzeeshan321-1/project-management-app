@@ -18,10 +18,9 @@ return new class extends Migration
             $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('uploaded_at')->nullable();
             $table->string('file_name');
-            $table->string('file_type')->nullable();
+            $table->enum('file_type', ['image', 'document'])->default('document');
             $table->string('file_url');
             $table->string('description')->nullable();
-
             $table->timestamps();
         });
     }

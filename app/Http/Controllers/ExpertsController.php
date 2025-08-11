@@ -21,7 +21,7 @@ class ExpertsController extends Controller
             abort(403, 'You do not have permission to view this page.');
         }
 
-        $experts = Expert::with('user')->orderBy('id', 'asc')->get();
+        $experts = Expert::with('user')->where('tanent_id', auth()->user()->tanent->id)->orderBy('id', 'asc')->get();
         return view('experts.index', compact('experts'));
 
     }

@@ -14,16 +14,13 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
-            $table->foreignid('tanent_id')->constrained('tanents')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-
-            $table->enum('type', ['debit', 'credit','return']);
+            $table->foreignid('sender_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('reciever_id')->constrained('users')->onDelete('cascade');
+            $table->enum('type', ['debit', 'credit', 'return']);
             $table->integer('amount');
-
-            $table->string('upload_invoice');
+            $table->string('upload_invoice')->nullable();
             $table->text('note')->nullable();
-            $table->enum('status', ['pending', 'received', 'retuned'])->default('received');
-
+            $table->enum('status', ['pending', 'received', 'returned'])->default('pending');
             $table->timestamps();
         });
     }

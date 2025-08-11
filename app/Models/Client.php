@@ -27,4 +27,9 @@ class Client extends Model
         return $this->hasMany(Project::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
 }

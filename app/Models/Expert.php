@@ -24,6 +24,11 @@ class Expert extends Model
         return $this->belongsTo(Tanent::class);
     }
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
      public function projectAssigns()
     {
         return $this->hasMany(ProjectAssign::class);

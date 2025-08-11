@@ -13,7 +13,7 @@ class Tanent extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function experts()
@@ -26,10 +26,15 @@ class Tanent extends Model
         return $this->hasMany(Client::class, 'tanent_id');
     }
 
+
     public function projects()
     {
         return $this->hasMany(Project::class, 'tanent_id');
-
+    }
+    
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'tanent_id');
     }
 
 }

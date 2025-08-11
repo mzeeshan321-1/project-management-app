@@ -20,7 +20,37 @@ class TasksController extends Controller
         if (!auth()->user()->hasPermissionTo('view tasks')) {
             abort(403, 'You do not have permission to view this page.');
         }
-        $tasks = Task::with('project')->where('tanent_id', auth()->user()->tanent->id)->orderBy('id', 'asc')->get();
+        $user = auth()->user();
+        $tanentId = null;
+        $projects = collect();
+
+        if ($user->tanent) {
+            $tanentId = $user->tanent->id;
+            $tasks = Task::with('expert', 'project')
+                ->where('tanent_id', $tanentId)
+                ->orderBy('id', 'asc')
+                ->get();
+        } elseif ($user->expert) {
+            $tanentId = $user->expert->tanent_id;
+            $expertId = $user->expert->id;
+            // Only show projects assigned to this expert
+            $tasks = Task::with('expert', 'project')
+                ->where('tanent_id', $tanentId)
+                ->whereHas('project', function ($query) use ($expertId) {
+                    $query->whereHas('projectAssigns', function ($query) use ($expertId) {
+                        $query->where('expert_id', $expertId);
+                    });
+                })
+                ->orderBy('id', 'asc')
+                ->get();
+        }
+        if (!$tanentId) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Tenant not found for the current user.');
+            return redirect()->back();
+        }
         return view('tasks.index', compact('tasks'));
     }
 

@@ -28,6 +28,16 @@ class User extends Authenticatable
         return $this->hasOne(Client::class, 'user_id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }   
+
     /**
      * The attributes that are mass assignable.
      *

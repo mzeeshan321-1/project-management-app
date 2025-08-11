@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('profits', function (Blueprint $table) {
             $table->id();
-            $table->foreignid('tanent_id')->constrained('tanents')->onDelete('cascade');
+            $table->foreignId('tanent_id')->constrained('tanents')->onDelete('cascade');
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
-            $table->foreignId('payment_id')->constrained('users')->onDelete('cascade');
-            $table->integer('profit');
+            $table->foreignId('payment_id')->nullable()->constrained('payments')->onDelete('cascade');
+            $table->decimal('expert_cost', 10, 2);
+            $table->decimal('profit', 10, 2);
+            $table->decimal('profit_percentage', 5, 2);
             $table->text('note')->nullable();
-            
             $table->timestamps();
         });
     }

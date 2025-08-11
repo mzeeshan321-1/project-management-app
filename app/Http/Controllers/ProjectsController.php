@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Profit;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +19,44 @@ class ProjectsController extends Controller
         if (!auth()->user()->hasPermissionTo('view projects')) {
             abort(403, 'You do not have permission to view this page.');
         }
-        $projects = Project::with('client')->orderBy('id', 'asc')->get();
+        $user = auth()->user();
+        $tanentId = null;
+        $projects = collect();
+
+        if ($user->tanent) {
+            $tanentId = $user->tanent->id;
+            $projects = Project::with('client')
+                ->where('tanent_id', $tanentId)
+                ->orderBy('id', 'asc')
+                ->get();
+        } elseif ($user->expert) {
+            $tanentId = $user->expert->tanent_id;
+            $expertId = $user->expert->id;
+            // Only show projects assigned to this expert
+            $projects = Project::with('client')
+                ->where('tanent_id', $tanentId)
+                ->whereHas('projectAssigns', function ($query) use ($expertId) {
+                    $query->where('expert_id', $expertId);
+                })
+                ->orderBy('id', 'asc')
+                ->get();
+        } elseif ($user->client) {
+            $tanentId = $user->client->tanent_id;
+            // Only show projects for this client
+            $projects = Project::with('client')
+                ->where('tanent_id', $tanentId)
+                ->where('client_id', $user->client->id)
+                ->orderBy('id', 'asc')
+                ->get();
+        }
+
+        if (!$tanentId) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Tenant not found for the current user.');
+            return redirect()->back();
+        }
         return view('projects.index', compact('projects'));
     }
 
@@ -88,7 +126,15 @@ class ProjectsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $project = Project::with(['client.user', 'files.user', 'tasks', 'projectAssigns.expert.user'])->find($id);
+        if (empty($project)) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Project ID no: ' . $id . ' Not found!');
+            return redirect()->back();
+        }
+        return view('projects.show', compact('project'));
     }
 
     /**
@@ -142,7 +188,7 @@ class ProjectsController extends Controller
         }
 
         try {
-             $project->update([
+            $project->update([
                 'client_id' => $request->client_id,
                 'title' => $request->title,
                 'description' => $request->description,
@@ -151,6 +197,8 @@ class ProjectsController extends Controller
                 'budget' => $request->budget,
                 'status' => $request->status,
             ]);
+
+            $this->calculateProfit();
 
             flash()->options([
                 'timeout' => 3000,
@@ -195,4 +243,109 @@ class ProjectsController extends Controller
             return redirect()->back()->withInput();
         }
     }
+
+    /**
+     * Update the status of the specified resource.
+     */
+    public function updateStatus(Request $request, string $id)
+    {
+        $project = Project::find($id);
+        if (empty($project)) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Project ID no: ' . $id . ' Not found!');
+            return redirect()->back();
+        }
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:in_progress,completed,inactive,cancelled',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            flash()->options([
+                'timeout' => 3000, // 3 seconds
+                'position' => 'bottom-center',
+            ])->error('Validation failed: ' . implode(', ', $errors));
+            return redirect()->back();
+        }
+
+        try {
+            $project->update([
+                'status' => $request->status,
+            ]);
+
+            $this->calculateProfit();
+
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->success('Project ID no: ' . $id . ' Status Updated Successfully!');
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            flash()->options([
+                'timeout' => 3000, // 3 seconds
+                'position' => 'bottom-center',
+            ])->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
+    /**
+     * Calculate profit.
+     */
+    public function calculateProfit()
+    {
+        // Get project with its assignments and payments
+        $projects = Project::with(['projectAssigns', 'payments'])->where('tanent_id', auth()->user()->tanent->id)
+        ->orderBy('id', 'asc')->get();
+        foreach ($projects as $project) {
+            if ($project->projectAssigns->count() === '0') {
+                flash()->options([
+                    'timeout' => 3000, // 3 seconds
+                    'position' => 'bottom-center',
+                ])->error('No assignments found for the project.');
+                return redirect()->back();
+            }
+
+            if ($project->status === 'completed' && $project->projectAssigns->count() > '0') {
+                try {
+                    // Get project budget
+                    $projectBudget = $project->budget;
+
+                    // Calculate total expert cost from assignments (0 if no assignments)
+                    $expertCost = $project->projectAssigns->sum('budget') ?? 0;
+
+                    // Get latest payment if exists
+                    $paymentId = $project->payments->last()->id ?? null;
+
+                    // Calculate profit using the model's method
+                    $profitCalc = Profit::calculateProfit($projectBudget, $expertCost);
+
+                    // Create or update profit record
+                    Profit::updateOrCreate(
+                        [
+                            'project_id' => $project->id,
+                            'payment_id' => $paymentId
+                        ],
+                        [
+                            'tanent_id' => $project->tanent_id,
+                            'profit' => $profitCalc['profit'],
+                            'profit_percentage' => $profitCalc['profit_percentage'],
+                        ]
+                    );
+                } catch (\Exception $e) {
+                    flash()->options([
+                        'timeout' => 3000, // 3 seconds
+                        'position' => 'bottom-center',
+                    ])->error('Error updating project status: ' . $e->getMessage());
+                    return redirect()->back()->withInput();
+                }
+            }
+        }
+    }
+
 }
+

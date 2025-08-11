@@ -37,4 +37,14 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
 }
