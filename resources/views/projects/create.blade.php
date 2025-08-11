@@ -75,7 +75,8 @@
                 <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" name="status" id="Status" aria-label="Status" required>
-                            <option selected value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option selected value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive
+                            </option>
                             <option value="in_progress" {{ old('status') == 'in_progress' ? 'selected' : '' }}>In Progress
                             </option>
                             <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed
@@ -99,7 +100,7 @@
     <script>
         $(document).ready(function() {
             $("#start_datepicker, #deadline_datepicker").datepicker({
-                dateFormat: "yy-mm-dd",
+                dateFormat: "dd-M-yy",
                 changeMonth: true,
                 changeYear: true,
             });

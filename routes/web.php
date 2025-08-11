@@ -50,6 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/profit_reports/calculate/{project}/{payment}', [ProfitReportsController::class, 'calculateProfit'])->name('profits.calculate');
     Route::delete('/profit_reports/{id}', [ProfitReportsController::class, 'destroy'])->name('profits.delete');
 
+    // Projects Show Route
+    Route::get('projects/{id}/show', [ProjectsController::class, 'show'])->name('projects.show');
 
     // Super Admin Role Routes
     Route::middleware(['role:super-admin'])->group(function () {
@@ -62,8 +64,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/middleman/{id}', [MiddlemanController::class, 'destroy'])->name('middleman.delete');
 
     });
-
-    Route::get('projects/{id}', [ProjectsController::class, 'show'])->name('projects.show');
 
     // Middleman Role Routes
     Route::middleware(['role:middleman'])->group(function () {

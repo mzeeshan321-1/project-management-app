@@ -36,7 +36,11 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th class="text-center align-middle">P.ID</th>
+                                        @role('middleman')
                                         <th class="text-center align-middle">Client</th>
+                                        @elserole('client')
+                                        <th class="text-center align-middle">Tanent</th>
+                                        @endrole
                                         <th class="align-middle">Title</th>
                                         <th class="text-center align-middle">Description</th>
                                         <th class="text-center align-middle">Start Date</th>
@@ -51,18 +55,23 @@
                                         @foreach ($projects as $project)
                                             <tr>
                                                 <td class="text-center align-middle">{{ $project->id }}</td>
-                                                <td class="text-center align-middle">
-                                                    {{ $project->client->user->first_name }}
-                                                    {{ $project->client->user->last_name }}</td>
-
+                                                @role('middleman')
+                                                    <td class="text-center align-middle">
+                                                        {{ $project->client->user->first_name }}
+                                                        {{ $project->client->user->last_name }}</td>
+                                                    @elserole('client')
+                                                    <td class="text-center align-middle">
+                                                        {{ $project->tanent->user->first_name }}
+                                                        {{ $project->tanent->user->last_name }}</td>
+                                                @endrole
                                                 <td class="align-middle">{{ $project->title }}</td>
                                                 <td class="text-center align-middle">{{ $project->description ?? 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    {{ $project->start_date ? \Carbon\Carbon::parse($project->start_date)->diffForHumans() : 'N/A' }}
+                                                    {{ $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('d-M-Y') : 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    {{ $project->deadline ? \Carbon\Carbon::parse($project->deadline)->diffForHumans() : 'N/A' }}
+                                                    {{ $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('d-M-Y') : 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">{{ $project->budget ?? 'N/A' }}</td>
                                                 <td class="text-center align-middle">
@@ -83,7 +92,8 @@
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex justify-content-center">
                                                         <a href="{{ route('projects.show', $project->id) }}"
-                                                            class="btn btn-light btn-sm text-secondary mx-1" title="View Details">
+                                                            class="btn btn-light btn-sm text-secondary mx-1"
+                                                            title="View Details">
                                                             <i class="ri-eye-line"></i>
                                                         </a>
                                                         <a href="{{ route('projects.edit', $project->id) }}"
