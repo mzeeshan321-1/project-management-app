@@ -59,20 +59,19 @@
                 </div>
                 <div class="col-md-12">
                     <div class="form-floating">
-                        <textarea class="form-control" name="address" id="Address" placeholder="Address" style="height: 100px;" required>{{ old('address') }}</textarea>
+                        <textarea class="form-control" name="address" id="Address" placeholder="Address" style="height: 100px;">{{ old('address') }}</textarea>
                         <label for="Address">Address</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="text" class="form-control"value="{{ old('contact') }}" name="contact" id="Contact" placeholder="Contact Info"
-                            required>
+                        <input type="text" class="form-control"value="{{ old('contact') }}" name="contact" id="Contact" placeholder="Contact Info">
                         <label for="Contact">Contact Info</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <select class="form-select" name="status" id="Status" aria-label="Status" placeholder="Status" required>
+                        <select class="form-select" name="status" id="Status" aria-label="Status" placeholder="Status">
                             <option selected value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                             <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
                             <option value="suspended" {{ old('status') == 'suspended' ? 'selected' : '' }}>Suspended</option>

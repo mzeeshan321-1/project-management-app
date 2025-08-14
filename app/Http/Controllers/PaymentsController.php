@@ -43,16 +43,26 @@ class PaymentsController extends Controller
 
         if ($user->tanent) {
             $tanentId = $user->tanent->id;
-            $users = User::whereHas('client', function ($query) use ($tanentId) {
+            $users = User::whereHas('expert', function ($query) use ($tanentId) {
                 $query->where('tanent_id', $tanentId);
-            })->orWhereHas('expert', function ($query) use ($tanentId) {
-                $query->where('tanent_id', $tanentId);
-            })->orderBy('id', 'asc')->get();
+            })
+            // ->orWhereHas('client', function ($query) use ($tanentId) {
+            //     $query->where('tanent_id', $tanentId);
+            // })
+            ->orderBy('id', 'asc')->get();
+            $projects = Project::where('tanent_id', $tanentId)
+                ->where('status', 'completed')
+                ->orderBy('id', 'asc')->get();
         } elseif ($user->client) {
             $tanentId = $user->client->tanent_id;
             $users = User::whereHas('tanent', function ($query) use ($tanentId) {
                 $query->where('id', $tanentId);
             })->orderBy('id', 'asc')->get();
+            $projects = Project::whereHas('client', function ($query) use ($user) {
+                $query->where('client_id', $user->client->id);
+            })
+            ->where('status', 'completed')
+            ->orderBy('id', 'asc')->get();
         }
 
         if (!$tanentId) {
@@ -62,7 +72,7 @@ class PaymentsController extends Controller
             ])->error('Tenant not found for the current user.');
             return redirect()->back();
         }
-        $projects = Project::where('tanent_id', $tanentId)->orderBy('id', 'asc')->get();
+        
         return view('payments.create', compact('projects', 'users'));
     }
 
@@ -84,16 +94,27 @@ class PaymentsController extends Controller
         if ($validator->fails()) {
             $errors = $validator->errors()->all();
             flash()->options([
-                'timeout' => 3000, // 3 seconds
+                'timeout' => 3000,
                 'position' => 'bottom-center',
             ])->error('Validation failed: ' . implode(', ', $errors));
             return redirect()->back();
         }
 
         try {
-            if (!file_exists(public_path('images'))) {
-                mkdir(public_path('images'), 0755, true); // Create the directory if it doesn't exist
+            $project = Project::find($request->project_id);
+            $projectBudget = $project->budget;
+            if ($request->amount != $projectBudget) {
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error("Payment Amount Must Be Equal to the project's budget.");
+                return redirect()->back()->withInput();
             }
+
+            if (!file_exists(public_path('images'))) {
+                mkdir(public_path('images'), 0755, true);
+            }
+
             if ($request->hasFile('upload_invoice')) {
                 $image = $request->file('upload_invoice');
                 $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
@@ -118,6 +139,14 @@ class PaymentsController extends Controller
                 'upload_invoice' => $imageName
             ]);
 
+            if (auth()->user()->hasRole('client')) {
+                if ($project && $project->status === 'completed') {
+                    $project->update([
+                        'approval_status' => true
+                    ]);
+                }
+            }
+
             flash()->options([
                 'timeout' => 3000,
                 'position' => 'bottom-center',
@@ -126,7 +155,7 @@ class PaymentsController extends Controller
             return redirect()->route('payments.index');
         } catch (\Exception $e) {
             flash()->options([
-                'timeout' => 3000, // 3 seconds
+                'timeout' => 3000,
                 'position' => 'bottom-center',
             ])->error($e->getMessage());
             return redirect()->back()->withInput();
@@ -157,18 +186,28 @@ class PaymentsController extends Controller
         $user = auth()->user();
         $tanentId = null;
 
-        if ($user->tanent) {
+       if ($user->tanent) {
             $tanentId = $user->tanent->id;
-            $users = User::whereHas('client', function ($query) use ($tanentId) {
+            $users = User::whereHas('expert', function ($query) use ($tanentId) {
                 $query->where('tanent_id', $tanentId);
-            })->orWhereHas('expert', function ($query) use ($tanentId) {
-                $query->where('tanent_id', $tanentId);
-            })->orderBy('id', 'asc')->get();
+            })
+            // ->orWhereHas('expert', function ($query) use ($tanentId) {
+            //     $query->where('tanent_id', $tanentId);
+            // })
+            ->orderBy('id', 'asc')->get();
+            $projects = Project::where('tanent_id', $tanentId)
+                ->where('status', 'completed')
+                ->orderBy('id', 'asc')->get();
         } elseif ($user->client) {
             $tanentId = $user->client->tanent_id;
             $users = User::whereHas('tanent', function ($query) use ($tanentId) {
                 $query->where('id', $tanentId);
             })->orderBy('id', 'asc')->get();
+            $projects = Project::whereHas('client', function ($query) use ($user) {
+                $query->where('client_id', $user->client->id);
+            })
+            ->where('status', 'completed')
+            ->orderBy('id', 'asc')->get();
         }
 
         if (!$tanentId) {
@@ -178,7 +217,7 @@ class PaymentsController extends Controller
             ])->error('Tenant not found for the current user.');
             return redirect()->back();
         }
-        $projects = Project::where('tanent_id', $tanentId)->orderBy('id', 'asc')->get();
+
         return view('payments.edit', compact('projects', 'users', 'payment'));
     }
 
@@ -216,6 +255,17 @@ class PaymentsController extends Controller
         }
 
         try {
+            $project = Project::find($payment->project_id);
+            $projectBudget = $project->budget;
+
+            if ($request->amount != $projectBudget) {
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error("Payment Amount Must Be Equal to the project's budget.");
+                return redirect()->back()->withInput();
+            }
+
             if ($request->hasFile('upload_invoice')) {
                 $userImage = $payment->upload_invoice;
                 $imageName = null;
@@ -242,7 +292,7 @@ class PaymentsController extends Controller
                 'type' => $request->type,
                 'amount' => $request->amount,
                 'status' => $request->status,
-                'upload_invoice' => $imageName
+                'upload_invoice' => $imageName,
             ]);
 
             flash()->options([
@@ -283,6 +333,13 @@ class PaymentsController extends Controller
                 }
             }
             $payment->delete();
+            if (auth()->user()->hasRole('client')) {
+                // Update project approval status to false when a payment is deleted
+                $project = Project::find($payment->project_id);
+                if ($project && $project->status === 'completed') {
+                    $project->update(['approval_status' => false]);
+                }
+            }
             flash()->options([
                 'timeout' => 3000, // 3 seconds
                 'position' => 'bottom-center',
@@ -297,3 +354,4 @@ class PaymentsController extends Controller
         }
     }
 }
+

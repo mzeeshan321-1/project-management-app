@@ -50,21 +50,14 @@
                         <label for="Description">Description</label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="due_date" id="due_datepicker"
                             value="{{ old('due_date') }}" placeholder="Due Date" autocomplete="off">
                         <label for="due_datepicker">Due Date</label>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input type="text" name="completed_at" class="form-control" placeholder="Completed At"
-                            id="completed_at_datepicker" value="{{ old('completed_at') }}" required>
-                        <label for="completed_at_datepicker">Completed At</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-floating">
                         <select class="form-select" name="priority" id="Priority" aria-label="Priority" required>
                             <option selected value="low" {{ old('status') == 'low' ? 'selected' : '' }}>Low</option>
@@ -74,7 +67,7 @@
                         <label for="Priority">Priority</label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-floating">
                         <select class="form-select" name="status" id="Status" aria-label="Status" required>
                             <option selected value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -101,11 +94,12 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $("#due_datepicker, #completed_at_datepicker").datepicker({
-                dateFormat: "yy-mm-dd",
+            $("#due_datepicker").datepicker({
+                dateFormat: "dd-M-yy",
                 changeMonth: true,
                 changeYear: true,
             });
         });
     </script>
 @endsection
+

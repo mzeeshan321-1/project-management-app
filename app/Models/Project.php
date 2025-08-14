@@ -15,6 +15,7 @@ class Project extends Model
         'deadline',
         'budget',
         'status',
+        'approval_status',
     ];
 
     public function tanent()

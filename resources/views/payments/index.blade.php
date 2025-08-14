@@ -43,7 +43,9 @@
                                         {{-- <th class="text-center align-middle">Invoice</th> --}}
                                         <th class="text-center align-middle">Type</th>
                                         <th class="text-center align-middle">Status</th>
-                                        <th class="text-center align-middle">Action</th>
+                                        @can('manage payments')
+                                            <th class="text-center align-middle">Action</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 @if ($payments->isNotEmpty())
@@ -53,15 +55,15 @@
                                                 <td class="text-center align-middle">{{ $payment->id }}</td>
                                                 <td class="text-center align-middle">{{ $payment->project->title }}</td>
                                                 <td class="text-center align-middle">
-                                                    {{ $payment->receiver ? $payment->receiver->first_name . ' ' . $payment->receiver->last_name : 'N/A' }}</td>
+                                                    {{ $payment->receiver ? $payment->receiver->first_name . ' ' . $payment->receiver->last_name : 'N/A' }}
+                                                </td>
                                                 <td class="text-center align-middle">{{ $payment->amount ?? 'N/A' }}
                                                 </td>
                                                 {{-- <td class="text-center align-middle">{{ $payment->upload_invoice ?? 'N/A' }}</td> --}}
                                                 <td class="text-center align-middle">{{ $payment->note ?? 'N/A' }}</td>
                                                 <td class="text-center align-middle">
                                                     @if ($payment->type == 'debit')
-                                                        <span
-                                                            class="badge bg-info">{{ strtoupper($payment->type) }}</span>
+                                                        <span class="badge bg-info">{{ strtoupper($payment->type) }}</span>
                                                     @elseif ($payment->type == 'credit')
                                                         <span
                                                             class="badge bg-success">{{ strtoupper($payment->type) }}</span>
@@ -82,31 +84,36 @@
                                                             class="badge bg-danger">{{ strtoupper($payment->status) }}</span>
                                                     @endif
                                                 </td>
-                                                <td class="text-center align-middle">
-                                                    <div class="d-flex justify-content-center">
-                                                        <a href="{{ route('payments.edit', $payment->id) }}"
-                                                            class="btn btn-light btn-sm text-primary mx-1" title="Edit">
-                                                            <i class="ri-edit-line"></i>
-                                                        </a>
-                                                        @if (Route::has('payments.delete'))
-                                                            <form action="{{ route('payments.delete', $payment->id) }}"
-                                                                method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-light btn-sm text-danger mx-1"
-                                                                    title="Delete">
-                                                                    <i class="ri-delete-bin-line"></i>
-                                                                </button>
-                                                            </form>
-                                                        @else
-                                                            <a href="#" class="btn btn-light btn-sm text-danger mx-1"
-                                                                title="Delete">
-                                                                <i class="ri-delete-bin-line"></i>
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </td>
+                                                @can('manage payments')
+                                                    <td class="text-center align-middle">
+                                                        <div class="dropdown position-static">
+                                                            <button class="btn btn-light btn-sm rounded-circle" type="button"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <i class="bi bi-three-dots-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-end"
+                                                                style="position: fixed;">
+                                                                <li>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('payments.edit', $payment->id) }}">
+                                                                        <i class="bi bi-pencil me-2"></i> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <form action="{{ route('payments.delete', $payment->id) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="dropdown-item text-danger"
+                                                                            onclick="return confirm('Are you sure you want to delete this file?')">
+                                                                            <i class="bi bi-trash me-2"></i> Delete
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                @endcan
                                             </tr>
                                         @endforeach
                                     </tbody>

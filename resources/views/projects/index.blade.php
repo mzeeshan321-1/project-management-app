@@ -37,9 +37,9 @@
                                     <tr class="text-center">
                                         <th class="text-center align-middle">P.ID</th>
                                         @role('middleman')
-                                        <th class="text-center align-middle">Client</th>
-                                        @elserole('client')
-                                        <th class="text-center align-middle">Tanent</th>
+                                            <th class="text-center align-middle">Client</th>
+                                            @elserole('client')
+                                            <th class="text-center align-middle">Tanent</th>
                                         @endrole
                                         <th class="align-middle">Title</th>
                                         <th class="text-center align-middle">Description</th>
@@ -90,33 +90,39 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    <div class="d-flex justify-content-center">
-                                                        <a href="{{ route('projects.show', $project->id) }}"
-                                                            class="btn btn-light btn-sm text-secondary mx-1"
-                                                            title="View Details">
-                                                            <i class="ri-eye-line"></i>
-                                                        </a>
-                                                        <a href="{{ route('projects.edit', $project->id) }}"
-                                                            class="btn btn-light btn-sm text-primary mx-1" title="Edit">
-                                                            <i class="ri-edit-line"></i>
-                                                        </a>
-                                                        @if (Route::has('projects.delete'))
-                                                            <form action="{{ route('projects.delete', $project->id) }}"
-                                                                method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-light btn-sm text-danger mx-1"
-                                                                    title="Delete">
-                                                                    <i class="ri-delete-bin-line"></i>
-                                                                </button>
-                                                            </form>
-                                                        @else
-                                                            <a href="#" class="btn btn-light btn-sm text-danger mx-1"
-                                                                title="Delete">
-                                                                <i class="ri-delete-bin-line"></i>
-                                                            </a>
-                                                        @endif
+                                                    <div class="dropdown position-static">
+                                                        <button class="btn btn-light btn-sm rounded-circle" type="button"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end"
+                                                            style="position: fixed;">
+                                                            <li>
+                                                                <a href="{{ route('projects.show', $project->id) }}"
+                                                                    class="dropdown-item">
+                                                                    <i class="ri-eye-line"></i> Show
+                                                                </a>
+                                                            </li>
+                                                            @can('manage projects')
+                                                            <li>
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('projects.edit', $project->id) }}">
+                                                                    <i class="bi bi-pencil me-2"></i> Edit
+                                                                </a>
+                                                            </li>
+                                                                <li>
+                                                                    <form action="{{ route('projects.delete', $project->id) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="dropdown-item text-danger"
+                                                                            onclick="return confirm('Are you sure you want to delete this file?')">
+                                                                            <i class="bi bi-trash me-2"></i> Delete
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            @endcan
+                                                        </ul>
                                                     </div>
                                                 </td>
                                             </tr>

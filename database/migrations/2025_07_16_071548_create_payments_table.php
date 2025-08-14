@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignid('sender_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('reciever_id')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['debit', 'credit', 'return']);
-            $table->integer('amount');
+            $table->integer('amount')->default(0);
             $table->string('upload_invoice')->nullable();
             $table->text('note')->nullable();
             $table->enum('status', ['pending', 'received', 'returned'])->default('pending');

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('deadline')->nullable();
             $table->integer('budget');
             $table->enum('status', ['in_progress', 'completed', 'inactive', 'cancelled'])->default('inactive');
-            $table->boolean('approved')->default(false);
+            $table->boolean('approval_status')->default(false);
             $table->timestamps();
         });
     }

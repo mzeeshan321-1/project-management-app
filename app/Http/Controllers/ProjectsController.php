@@ -6,9 +6,9 @@ use App\Models\Client;
 use App\Models\Profit;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class ProjectsController extends Controller
 {
@@ -98,6 +98,14 @@ class ProjectsController extends Controller
             $startDate = Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d');
             $deadline = Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d');
 
+             if ($request->budget <= 0) {
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error("Project Budget Must Not be '0'!");
+                return redirect()->back()->withInput();
+            }
+
             Project::create([
                 'tanent_id' => auth()->user()->tanent->id,
                 'client_id' => $request->client_id,
@@ -129,7 +137,20 @@ class ProjectsController extends Controller
      */
     public function show(string $id)
     {
-        $project = Project::with(['client.user', 'files.user', 'tasks', 'projectAssigns.expert.user'])->find($id);
+        $user = auth()->user();
+        $tanentId = null;
+
+        if ($user->tanent) {
+            $tanentId = $user->tanent->id;
+        } elseif ($user->expert) {
+            $tanentId = $user->expert->tanent_id;
+        } elseif ($user->client) {
+            $tanentId = $user->client->tanent_id;
+        }
+
+        $project = Project::with(['client.user', 'files.user', 'tasks', 'projectAssigns.expert.user'])
+            ->where('tanent_id', $tanentId)
+            ->find($id);
         if (empty($project)) {
             flash()->options([
                 'timeout' => 3000,
@@ -175,8 +196,8 @@ class ProjectsController extends Controller
             'client_id' => 'nullable|exists:clients,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'start_date' => 'nullable|date|before_or_equal:deadline',
-            'deadline' => 'nullable|date|after_or_equal:start_date',
+            'start_date' => 'nullable|date_format:d-M-Y|before_or_equal:deadline',
+            'deadline' => 'nullable|date_format:d-M-Y|after_or_equal:start_date',
             'budget' => 'required|integer|min:0',
             'status' => 'nullable|in:in_progress,completed,inactive,cancelled',
         ]);
@@ -191,12 +212,23 @@ class ProjectsController extends Controller
         }
 
         try {
+            $startDate = Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d');
+            $deadline = Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d');
+
+            if ($request->budget <= 0) {
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error("Project Budget Must Not be '0'!");
+                return redirect()->back()->withInput();
+            }
+
             $project->update([
                 'client_id' => $request->client_id,
                 'title' => $request->title,
                 'description' => $request->description,
-                'start_date' => $request->start_date,
-                'deadline' => $request->deadline,
+                'start_date' => $startDate,
+                'deadline' => $deadline,
                 'budget' => $request->budget,
                 'status' => $request->status,
             ]);

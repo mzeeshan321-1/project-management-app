@@ -51,21 +51,14 @@
                         <label for="Description">Description</label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="due_date" id="due_datepicker"
                             value="{{ $task->due_date }}" placeholder="Due Date" autocomplete="off">
                         <label for="due_datepicker">Due Date</label>
                     </div>
                 </div>
-               <div class="col-md-6">
-                    <div class="form-floating">
-                        <input type="text" name="completed_at" class="form-control" placeholder="Completed At"
-                            id="completedAt_datepicker" value="{{ $task->completed_at }}" required>
-                        <label for="completedAt_datepicker">Completed At</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-floating">
                         <select class="form-select" name="priority" id="Priority" aria-label="Priority" required>
                             <option selected value="low" {{ $task->priority == 'low' ? 'selected' : '' }}>Low</option>
@@ -75,7 +68,7 @@
                         <label for="Priority">Priority</label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-floating">
                         <select class="form-select" name="status" id="Status" aria-label="Status" required>
                             <option selected value="pending" {{ $task->status == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -103,14 +96,7 @@
     <script>
         $(document).ready(function() {
             $("#due_datepicker").datepicker({
-                dateFormat: "yy-mm-dd",
-                changeMonth: true,
-                changeYear: true,
-            });
-
-            $("#completedAt_datepicker").datetimepicker({
-                dateFormat: "yy-mm-dd",
-                timeFormat: "HH:mm",
+                dateFormat: "dd-M-yy",
                 changeMonth: true,
                 changeYear: true,
             });

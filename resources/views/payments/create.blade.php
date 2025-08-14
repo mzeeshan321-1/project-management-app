@@ -15,8 +15,14 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    <div class="text-end mb-2" title="Back to Payments">
-        <a href="{{ route('payments.index') }}" class="btn btn-primary"><i class="ri-arrow-left-s-line"></i></a>
+    <div class="d-flex justify-content-between align-items-end mb-2">
+        <div>
+            <small class="text-danger fw-bold">NOTE:</small>
+            <small class="text-muted fw-italic">Payments can only be made for <b>Completed Projects!</b></small>
+        </div>
+        <div title="Back to Payments">
+            <a href="{{ route('payments.index') }}" class="btn btn-primary"><i class="ri-arrow-left-s-line"></i></a>
+        </div>
     </div>
     <div class="card">
         <div class="card-body">
@@ -135,3 +141,4 @@
         });
     </script>
 @endsection
+

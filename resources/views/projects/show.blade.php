@@ -23,10 +23,12 @@
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         <h2 class="text-center mb-3">{{ $project->title }}</h2>
-                        <h3>
-                            <span class="text-muted small">Budget: </span>
-                            <span class="fw-bold">${{ number_format($project->budget, 2) }}</span>
-                        </h3>
+                        @role('middleman')
+                            <h3>
+                                <span class="text-muted small">Budget: </span>
+                                <span class="fw-bold">${{ number_format($project->budget, 2) }}</span>
+                            </h3>
+                        @endrole
                         <div class="project-status mb-2">
                             @if ($project->status == 'in_progress')
                                 <span class="badge bg-primary px-3 py-2">In Progress</span>
@@ -56,10 +58,10 @@
                 </div>
 
                 <!-- Project Actions Card -->
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Project Actions</h5>
-                        @can('update project status')
+                @can('update project status')
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Project Actions</h5>
                             <form action="{{ route('projects.updateStatus', $project->id) }}" method="POST" class="mb-3">
                                 @csrf
                                 @method('PATCH')
@@ -78,12 +80,40 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary mt-3 w-100">Update Status</button>
                             </form>
-                        @endcan
-                        <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-outline-primary w-100 mb-2">
-                            <i class="bi bi-pencil-square"></i> Edit Project
-                        </a>
+                            @can('manage projects')
+                                <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-outline-primary w-100 mb-2">
+                                    <i class="bi bi-pencil-square"></i> Edit Project
+                                </a>
+                            @endcan
+                        </div>
                     </div>
-                </div>
+                @endcan
+
+                <!-- Approval Card -->
+                @role('client')
+                    @if ($project->status == 'completed')
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Project Approval</h5>
+                                <p>Once you approve the project, you will be prompted for payment.</p>
+                                @if ($project->status == 'completed' && !$project->approval_status)
+                                    <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal"
+                                        data-bs-target="#approvalModal">
+                                        <i class="bi bi-check-circle"></i> Approve Project
+                                    </button>
+                                @elseif($project->approval_status)
+                                    <div class="alert alert-success text-center" role="alert">
+                                        Project Approved!
+                                    </div>
+                                @else
+                                    <div class="alert alert-info text-center" role="alert">
+                                        Project must be completed to approve.
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                @endrole
             </div>
 
             <!-- Project Details and Documents -->
@@ -114,23 +144,25 @@
                                 <div class="table-responsive">
                                     <table class="table table-borderless table-hover align-middle">
                                         <tbody>
-                                            <tr>
-                                                <th class="bg-light" style="width: 30%">Client</th>
-                                                <td>{{ $project->client->user->first_name }}
-                                                    {{ $project->client->user->last_name }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th class="bg-light">Assigned Expert</th>
-                                                <td>
-                                                    @if ($project->projectAssigns && $project->projectAssigns->first())
-                                                        @php $assignment = $project->projectAssigns->first(); @endphp
-                                                        {{ $assignment->expert->user->first_name }}
-                                                        {{ $assignment->expert->user->last_name }}
-                                                    @else
-                                                        <span class="text-muted">No expert assigned</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
+                                            @can('manage projects')
+                                                <tr>
+                                                    <th class="bg-light" style="width: 30%">Client</th>
+                                                    <td>{{ $project->client->user->first_name }}
+                                                        {{ $project->client->user->last_name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-light">Assigned Expert</th>
+                                                    <td>
+                                                        @if ($project->projectAssigns && $project->projectAssigns->first())
+                                                            @php $assignment = $project->projectAssigns->first(); @endphp
+                                                            {{ $assignment->expert->user->first_name }}
+                                                            {{ $assignment->expert->user->last_name }}
+                                                        @else
+                                                            <span class="text-muted">No expert assigned</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endcan
                                             <tr>
                                                 <th class="bg-light">Task Overview</th>
                                                 <td>
@@ -244,7 +276,8 @@
                                                                 <ul class="dropdown-menu dropdown-menu-end"
                                                                     style="position: fixed;">
                                                                     <li>
-                                                                        <a class="dropdown-item" download href="{{ url('images/',$file->file_name) }}" >
+                                                                        <a class="dropdown-item" download
+                                                                            href="{{ url('images/', $file->file_name) }}">
                                                                             <i class="bi bi-download me-2"></i> Download
                                                                         </a>
                                                                     </li>
@@ -325,12 +358,14 @@
                                                             {{ $task->due_date ? date('M d, Y', strtotime($task->due_date)) : 'Not Set' }}
                                                         </small>
                                                     </div>
-                                                    <div class="task-actions">
-                                                        <a href="{{ route('tasks.edit', $task->id) }}"
-                                                            class="btn btn-sm btn-outline-primary">
-                                                            <i class="bi bi-pencil"></i>
-                                                        </a>
-                                                    </div>
+                                                    @can('manage tasks')
+                                                        <div class="task-actions">
+                                                            <a href="{{ route('tasks.edit', $task->id) }}"
+                                                                class="btn btn-sm btn-outline-primary">
+                                                                <i class="bi bi-pencil"></i>
+                                                            </a>
+                                                        </div>
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </div>
@@ -341,6 +376,26 @@
                                     @endforelse
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Approval Modal -->
+            <div class="modal fade" id="approvalModal" tabindex="-1" aria-labelledby="approvalModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header d-flex justify-content-center">
+                            <h5 class="modal-title" id="approvalModalLabel">Confirm Project Approval</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body px-5">
+                            <p>If you are satisfied with this project, please proceed to make the payment to finalize the
+                                approval.</p>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <a href="{{ route('payments.create') }}" class="btn btn-primary ms-2">Proceed to Payment</a>
                         </div>
                     </div>
                 </div>

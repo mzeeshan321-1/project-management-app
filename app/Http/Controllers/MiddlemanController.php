@@ -21,9 +21,34 @@ class MiddlemanController extends Controller
             abort(403, 'You do not have permission to view this page.');
         }
 
-        $tanents = Tanent::with('user')->orderBy('id', 'asc')->get();
-        return view('middleman.index', compact('tanents'));
+        $user = auth()->user();
+        
+        // Role-based tenant filtering
+        if ($user->hasRole('super-admin')) {
+            // Super admin can see all tenants
+            $tanents = Tanent::with('user')->orderBy('id', 'asc')->get();
+        } elseif ($user->hasRole('expert')) {
+            // Expert can only see their assigned tenant
+            $expert = $user->expert;
+            if ($expert && $expert->tanent_id) {
+                $tanents = Tanent::with('user')->where('id', $expert->tanent_id)->orderBy('id', 'asc')->get();
+            } else {
+                $tanents = collect(); // Empty collection if no tenant assigned
+            }
+        } elseif ($user->hasRole('client')) {
+            // Client can only see their assigned tenant
+            $client = $user->client;
+            if ($client && $client->tanent_id) {
+                $tanents = Tanent::with('user')->where('id', $client->tanent_id)->orderBy('id', 'asc')->get();
+            } else {
+                $tanents = collect(); // Empty collection if no tenant assigned
+            }
+        } else {
+            // Default behavior for other roles (like middleman) - show their own tenant
+            $tanents = Tanent::with('user')->where('user_id', $user->id)->orderBy('id', 'asc')->get();
+        }
 
+        return view('middleman.index', compact('tanents'));
     }
 
     /**

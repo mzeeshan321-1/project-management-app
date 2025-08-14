@@ -101,28 +101,34 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    <div class="d-flex justify-content-center">
-                                                        <a href="{{ route('experts.edit', $expert->id) }}"
-                                                            class="btn btn-light btn-sm text-primary mx-1" title="Edit">
-                                                            <i class="ri-edit-line"></i>
-                                                        </a>
-                                                        @if (Route::has('experts.delete'))
-                                                            <form action="{{ route('experts.delete', $expert->id) }}"
-                                                                method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-light btn-sm text-danger mx-1"
-                                                                    title="Delete">
-                                                                    <i class="ri-delete-bin-line"></i>
-                                                                </button>
-                                                            </form>
-                                                        @else
-                                                            <a href="#" class="btn btn-light btn-sm text-danger mx-1"
-                                                                title="Delete">
-                                                                <i class="ri-delete-bin-line"></i>
-                                                            </a>
-                                                        @endif
+                                                    <div class="dropdown position-static">
+                                                        <button class="btn btn-light btn-sm rounded-circle" type="button"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end"
+                                                            style="position: fixed;">
+                                                            @can('manage experts')
+                                                                <li>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('experts.edit', $expert->id) }}">
+                                                                        <i class="bi bi-pencil me-2"></i> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <form
+                                                                        action="{{ route('experts.delete', $expert->id) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="dropdown-item text-danger"
+                                                                            onclick="return confirm('Are you sure you want to delete this file?')">
+                                                                            <i class="bi bi-trash me-2"></i> Delete
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            @endcan
+                                                        </ul>
                                                     </div>
                                                 </td>
                                             </tr>

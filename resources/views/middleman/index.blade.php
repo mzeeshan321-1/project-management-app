@@ -40,7 +40,9 @@
                                         <!-- Removed text-center for left alignment -->
                                         <th class="text-center align-middle">Contact</th>
                                         <th class="text-center align-middle">Address</th>
+                                        @can('manage middleman')
                                         <th class="text-center align-middle">Last Login</th>
+                                        @endcan
                                         <th class="text-center align-middle">Status</th>
                                         @can('manage middleman')
                                             <th class="text-center align-middle">Action</th>
@@ -76,9 +78,11 @@
                                                 </td>
                                                 <td class="text-center align-middle">{{ $tanent->user->address ?? 'N/A' }}
                                                 </td>
+                                                @can('manage middleman')
                                                 <td class="text-center align-middle">
-                                                    {{ $tanent->user->last_login ? \Carbon\Carbon::parse($tanent->user->last_login)->format('Y-m-d') : 'N/A' }}
+                                                    {{ $tanent->user->last_login ? \Carbon\Carbon::parse($tanent->user->last_login)->format('d M Y') : 'N/A' }}
                                                 </td>
+                                                @endcan
                                                 <td class="text-center align-middle">
                                                     @if ($tanent->user->status == 'active')
                                                         <span
@@ -93,29 +97,32 @@
                                                 </td>
                                                 @can('manage middleman')
                                                     <td class="text-center align-middle">
-                                                        <div class="d-flex justify-content-center">
-                                                            <a href="{{ route('middleman.edit', $tanent->user->id) }}"
-                                                                class="btn btn-light btn-sm text-primary mx-1" title="Edit">
-                                                                <i class="ri-edit-line"></i>
-                                                            </a>
-                                                            @if (Route::has('middleman.delete'))
-                                                                <form
-                                                                    action="{{ route('middleman.delete', $tanent->user->id) }}"
-                                                                    method="POST" class="d-inline">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn btn-light btn-sm text-danger mx-1"
-                                                                        title="Delete">
-                                                                        <i class="ri-delete-bin-line"></i>
-                                                                    </button>
-                                                                </form>
-                                                            @else
-                                                                <a href="#" class="btn btn-light btn-sm text-danger mx-1"
-                                                                    title="Delete">
-                                                                    <i class="ri-delete-bin-line"></i>
-                                                                </a>
-                                                            @endif
+                                                        <div class="dropdown position-static">
+                                                            <button class="btn btn-light btn-sm rounded-circle" type="button"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <i class="bi bi-three-dots-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-end"
+                                                                style="position: fixed;">
+                                                                <li>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('middleman.edit', $tanent->user->id) }}">
+                                                                        <i class="bi bi-pencil me-2"></i> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <form
+                                                                        action="{{ route('middleman.delete', $tanent->user->id) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="dropdown-item text-danger"
+                                                                            onclick="return confirm('Are you sure you want to delete this file?')">
+                                                                            <i class="bi bi-trash me-2"></i> Delete
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
                                                         </div>
                                                     </td>
                                                 @endcan

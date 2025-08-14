@@ -116,7 +116,9 @@ class RolePermissionSeeder extends Seeder
 
             // Task permissions
             'view tasks',
+            'update tasks status',
             'manage tasks',
+            'assign tasks',
 
             //Settings permissions
             'view settings',
@@ -238,7 +240,7 @@ class RolePermissionSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         $tenantUser->assignRole('middleman');
-        
+
         // Create the tenant record
         $tenant = Tanent::create([
             'user_id' => $tenantUser->id,
@@ -265,7 +267,7 @@ class RolePermissionSeeder extends Seeder
                 'role' => 'expert',
                 'expert_data' => [
                     'tanent_id' => $tenant->id,
-                    'specialization' => 'Web Development',                    
+                    'specialization' => 'Web Development',
                 ]
             ],
             [
@@ -316,14 +318,14 @@ class RolePermissionSeeder extends Seeder
                     ['user_id' => $user->id]
                 ));
             }
-            
+
             if ($userData['role'] === 'expert' && isset($userData['expert_data'])) {
                 Expert::create(array_merge(
                     $userData['expert_data'],
                     ['user_id' => $user->id]
                 ));
             }
-            
+
             if ($userData['role'] === 'client' && isset($userData['client_data'])) {
                 Client::create(array_merge(
                     $userData['client_data'],

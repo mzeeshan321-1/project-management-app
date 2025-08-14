@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expert;
 use App\Models\Project;
-use App\Models\ProjectAssign;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class TasksController extends Controller
 {
@@ -72,8 +71,7 @@ class TasksController extends Controller
             'project_id' => 'required|exists:projects,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'due_date' => 'nullable|date',
-            'completed_at' => 'nullable|date',
+            'due_date' => 'nullable|date_format:d-M-Y|after_or_equal:today',
             'priority' => 'required|in:low,medium,high',
             'status' => 'required|in:pending,in_progress,completed,cancelled,on_hold',
         ]);
@@ -88,13 +86,14 @@ class TasksController extends Controller
         }
 
         try {
+            $dueDate = Carbon::createFromFormat('d-M-Y', $request->due_date)->format('Y-m-d');
+
             Task::create([
                 'tanent_id' => auth()->user()->tanent->id,
                 'project_id' => $request->project_id,
                 'title' => $request->title,
                 'description' => $request->description,
-                'due_date' => $request->due_date,
-                'completed_at' => $request->completed_at,
+                'due_date' => $dueDate,
                 'priority' => $request->priority,
                 'status' => $request->status,
             ]);
@@ -119,7 +118,15 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $task = Task::find($id);
+        if (empty($task)) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Task ID no: ' . $id . ' Not found!');
+            return redirect()->back();
+        }
+        return view('tasks.show', compact('task'));
     }
 
     /**
@@ -157,8 +164,7 @@ class TasksController extends Controller
             'project_id' => 'required|exists:projects,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'due_date' => 'nullable|date',
-            'completed_at' => 'nullable|date',
+            'due_date' => 'nullable|date_format:d-M-Y|after_or_equal:today',
             'priority' => 'required|in:low,medium,high',
             'status' => 'required|in:pending,in_progress,completed,cancelled,on_hold',
         ]);
@@ -173,12 +179,13 @@ class TasksController extends Controller
         }
 
         try {
+            $dueDate = Carbon::createFromFormat('d-M-Y', $request->due_date)->format('Y-m-d');
+
             $task->update([
                 'project_id' => $request->project_id,
                 'title' => $request->title,
                 'description' => $request->description,
-                'due_date' => $request->due_date,
-                'completed_at' => $request->completed_at,
+                'due_date' => $dueDate,
                 'priority' => $request->priority,
                 'status' => $request->status,
             ]);
@@ -226,4 +233,65 @@ class TasksController extends Controller
             return redirect()->back()->withInput();
         }
     }
+
+    public function updateStatus(Request $request, string $id)
+    {
+        $task = Task::find($id);
+        if (empty($task)) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Task ID no: ' . $id . ' Not found!');
+            return redirect()->back();
+        }
+
+        $user = auth()->user();
+        
+        // Determine validation rules based on user role
+        $validationRules = [
+            'status' => 'required|in:in_progress,completed,pending,cancelled,on_hold',
+        ];
+        
+        // Add priority validation only for middleman role
+        if ($user->hasRole('middleman')) {
+            $validationRules['priority'] = 'required|in:low,medium,high';
+        }
+
+        $validator = Validator::make($request->all(), $validationRules);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            flash()->options([
+                'timeout' => 3000, // 3 seconds
+                'position' => 'bottom-center',
+            ])->error('Validation failed: ' . implode(', ', $errors));
+            return redirect()->back();
+        }
+
+        try {
+            // Prepare update data based on user role
+            $updateData = ['status' => $request->status];
+            
+            // Only update priority if user has middleman role
+            if ($user->hasRole('middleman') && $request->has('priority')) {
+                $updateData['priority'] = $request->priority;
+            }
+            
+            $task->update($updateData);
+
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->success('Task ID no: ' . $id . ' Status Updated Successfully!');
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            flash()->options([
+                'timeout' => 3000, // 3 seconds
+                'position' => 'bottom-center',
+            ])->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
 }

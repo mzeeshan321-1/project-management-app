@@ -52,6 +52,12 @@ Route::middleware('auth')->group(function () {
 
     // Projects Show Route
     Route::get('projects/{id}/show', [ProjectsController::class, 'show'])->name('projects.show');
+    Route::patch('/projects/{id}/status', [ProjectsController::class, 'updateStatus'])->name('projects.updateStatus');
+
+    // Tasks Show Route
+    Route::get('tasks/{id}/show', [TasksController::class, 'show'])->name('tasks.show');
+    Route::patch('/tasks/{id}/status', [TasksController::class, 'updateStatus'])->name('tasks.updateStatus');
+
 
     // Super Admin Role Routes
     Route::middleware(['role:super-admin'])->group(function () {
@@ -90,8 +96,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/projects/{id}/edit', [ProjectsController::class, 'edit'])->name('projects.edit');
         Route::put('/projects/{id}', [ProjectsController::class, 'update'])->name('projects.update');
         Route::delete('/projects/{id}', [ProjectsController::class, 'destroy'])->name('projects.delete');
-        Route::patch('/projects/{id}/status', [ProjectsController::class, 'updateStatus'])->name('projects.updateStatus');
-
 
         // Project Assignment Routes
         Route::get('/project-assignments', [ProjectAssignmentController::class, 'index'])->name('project_assignments.index');

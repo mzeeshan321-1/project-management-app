@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="password" class="form-control" name="password" value="{{ $client->user->password }}"
+                        <input type="password" class="form-control" name="password"
                             id="Password" placeholder="Password" required autocomplete="off">
                         <label for="Password">Password</label>
                     </div>
@@ -64,7 +64,7 @@
                 <div class="col-md-6">
                     <div class="form-floating">
                         <input type="password" name="password_confirmation" class="form-control"
-                            value="{{ $client->user->password }}" placeholder="Confirm Password" id="password_confirmation"
+                            placeholder="Confirm Password" id="password_confirmation"
                             required autocomplete="new-password">
                         <label for="password_confirmation">Confirm Password</label>
                     </div>

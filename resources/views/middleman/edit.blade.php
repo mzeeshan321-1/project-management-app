@@ -49,34 +49,33 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="password" class="form-control" name="password" value="{{ $user->password }}"
+                        <input type="password" class="form-control" name="password"
                             id="Password" placeholder="Password" required autocomplete="off">
                         <label for="Password">Password</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="password" name="password_confirmation" class="form-control" value="{{ $user->password }}" placeholder="Confirm Password" id="password_confirmation" required autocomplete="new-password">
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" id="password_confirmation" required autocomplete="new-password">
                         <label for="password_confirmation">Confirm Password</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="form-floating">
-                        <textarea class="form-control" name="address" id="Address" placeholder="Address" style="height: 100px;" required>{{ $user->address }}</textarea>
+                        <textarea class="form-control" name="address" id="Address" placeholder="Address" style="height: 100px;">{{ $user->address }}</textarea>
                         <label for="Address">Address</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
                         <input type="text" class="form-control"value="{{ $user->contact }}" name="contact" id="Contact"
-                            placeholder="Contact Info" required>
+                            placeholder="Contact Info">
                         <label for="Contact">Contact Info</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <select class="form-select" name="status" id="Status" aria-label="Status" placeholder="Status"
-                            required>
+                        <select class="form-select" name="status" id="Status" aria-label="Status" placeholder="Status">
                             <option selected value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
                             <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
                             <option value="suspended" {{ $user->status == 'suspended' ? 'selected' : '' }}>Suspended</option>

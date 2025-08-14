@@ -57,6 +57,14 @@ class ProjectAssignmentController extends Controller
         }
 
         try {
+            if ($request->budget <= 0) {
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error("Project Assignment Budget Must Not be '0'!");
+                return redirect()->back()->withInput();
+            }
+
             ProjectAssign::create([
                 'tanent_id' => auth()->user()->tanent->id,
                 'project_id' => $request->project_id,
@@ -64,9 +72,6 @@ class ProjectAssignmentController extends Controller
                 'note' => $request->note,
                 'budget' => $request->budget,
             ]);
-
-            $projectsController = new ProjectsController();
-            $projectsController->calculateProfit('');
 
             flash()->options([
                 'timeout' => 3000,
@@ -140,6 +145,14 @@ class ProjectAssignmentController extends Controller
         }
 
         try {
+            if ($request->budget <= 0) {
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error("Project Assignment Budget Must Not be '0'!");
+                return redirect()->back()->withInput();
+            }
+
             $project_assignment->update([
                 'project_id' => $request->project_id,
                 'expert_id' => $request->expert_id,
