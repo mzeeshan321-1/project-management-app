@@ -103,11 +103,12 @@
                             <table class="table table-borderless table-hover">
                                 <thead>
                                     <tr>
+                                        <th class="text-center align-middle">ID</th>
                                         <th class="text-center align-middle">Project</th>
                                         <th class="text-center align-middle">Project Budget</th>
                                         <th class="text-center align-middle">Expert Cost</th>
                                         <th class="text-center align-middle">Payment Amount</th>
-                                        <th class="text-center align-middle">Net Profit</th>
+                                        <th class="text-center align-middle">{{ $profits->sum('profit_percentage') ? ( $profits->sum('profit_percentage') > 0 ? 'Net Profit' : 'Net Loss' ) : 'Net Profit' }}</th>
                                         <th class="text-center align-middle">Profit %</th>
                                         <th class="text-center align-middle">Status</th>
                                         <th class="text-center align-middle">Actions</th>
@@ -116,16 +117,12 @@
                                 <tbody>
                                     @forelse($profits as $profit)
                                         <tr>
+                                            <td class="text-center align-middle">{{ $profit->id }}</td>
                                             <td class="text-center align-middle">{{ $profit->project->title }}</td>
                                             <td class="text-center align-middle">
                                                 ${{ number_format($profit->project->budget, 2) }}</td>
-
-                                            @php
-                                                $expertCost = $profit->project->projectAssigns->first();
-                                            @endphp
-
                                             <td class="text-center align-middle">
-                                                {{ $expertCost ? '$' . number_format($expertCost->budget, 2) : 'N/A' }}</td>
+                                                {{ $profit->expert_cost ? '$' . number_format($profit->expert_cost, 2) : 'N/A' }}</td>
                                             <td class="text-center align-middle">
                                                 {{ $profit->payment ? '$' . number_format($profit->payment->amount, 2) : 'N/A' }}
                                             </td>

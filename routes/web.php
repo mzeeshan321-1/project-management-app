@@ -7,6 +7,7 @@ use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProfitReportsController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\ProjectAssignmentController;
 use App\Http\Controllers\MiddlemanController;
@@ -58,6 +59,14 @@ Route::middleware('auth')->group(function () {
     Route::get('tasks/{id}/show', [TasksController::class, 'show'])->name('tasks.show');
     Route::patch('/tasks/{id}/status', [TasksController::class, 'updateStatus'])->name('tasks.updateStatus');
 
+    // Settings Routes
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Super Admin Role Routes
     Route::middleware(['role:super-admin'])->group(function () {

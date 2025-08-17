@@ -32,12 +32,13 @@
                         </div>
                         <!-- Table with centered content -->
                         <div class="table-responsive">
-                            <table class="table datatable text-nowrap">
+                            <table class="table datatable">
                                 <thead>
                                     <tr class="text-center">
                                         <th class="text-center align-middle">P.ID</th>
                                         <th class="text-center align-middle">Project</th>
-                                        <th class="align-middle">Send To</th>
+                                        <th class="align-middle">Sender Name</th>
+                                        <th class="align-middle">Receiver Name</th>
                                         <th class="text-center align-middle">Amount</th>
                                         <th class="text-center align-middle">Note</th>
                                         {{-- <th class="text-center align-middle">Invoice</th> --}}
@@ -54,6 +55,9 @@
                                             <tr>
                                                 <td class="text-center align-middle">{{ $payment->id }}</td>
                                                 <td class="text-center align-middle">{{ $payment->project->title }}</td>
+                                                <td class="text-center align-middle">
+                                                    {{ $payment->sender ? $payment->sender->first_name . ' ' . $payment->sender->last_name : 'N/A' }}
+                                                </td>
                                                 <td class="text-center align-middle">
                                                     {{ $payment->receiver ? $payment->receiver->first_name . ' ' . $payment->receiver->last_name : 'N/A' }}
                                                 </td>

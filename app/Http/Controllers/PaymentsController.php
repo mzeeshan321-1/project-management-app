@@ -25,6 +25,7 @@ class PaymentsController extends Controller
 
         $payments = Payment::with(['sender', 'receiver', 'project'])
             ->where('sender_id', $sender)
+            ->orWhere('reciever_id', $sender)
             ->orderBy('id', 'asc')
             ->get();
         return view('payments.index', compact('payments'));
@@ -46,10 +47,10 @@ class PaymentsController extends Controller
             $users = User::whereHas('expert', function ($query) use ($tanentId) {
                 $query->where('tanent_id', $tanentId);
             })
-            // ->orWhereHas('client', function ($query) use ($tanentId) {
-            //     $query->where('tanent_id', $tanentId);
-            // })
-            ->orderBy('id', 'asc')->get();
+                // ->orWhereHas('client', function ($query) use ($tanentId) {
+                //     $query->where('tanent_id', $tanentId);
+                // })
+                ->orderBy('id', 'asc')->get();
             $projects = Project::where('tanent_id', $tanentId)
                 ->where('status', 'completed')
                 ->orderBy('id', 'asc')->get();
@@ -61,8 +62,8 @@ class PaymentsController extends Controller
             $projects = Project::whereHas('client', function ($query) use ($user) {
                 $query->where('client_id', $user->client->id);
             })
-            ->where('status', 'completed')
-            ->orderBy('id', 'asc')->get();
+                ->where('status', 'completed')
+                ->orderBy('id', 'asc')->get();
         }
 
         if (!$tanentId) {
@@ -72,7 +73,7 @@ class PaymentsController extends Controller
             ])->error('Tenant not found for the current user.');
             return redirect()->back();
         }
-        
+
         return view('payments.create', compact('projects', 'users'));
     }
 
@@ -103,11 +104,21 @@ class PaymentsController extends Controller
         try {
             $project = Project::find($request->project_id);
             $projectBudget = $project->budget;
-            if ($request->amount != $projectBudget) {
+            if (auth()->user()->hasRole('client')) {
+                if ($request->amount != $projectBudget) {
+                    flash()->options([
+                        'timeout' => 3000,
+                        'position' => 'bottom-center',
+                    ])->error("Payment Amount Must Be Equal to the project's budget.");
+                    return redirect()->back()->withInput();
+                }
+            }
+
+            if ($request->amount <= 0) {
                 flash()->options([
                     'timeout' => 3000,
                     'position' => 'bottom-center',
-                ])->error("Payment Amount Must Be Equal to the project's budget.");
+                ])->error("Payment Amount Must be higher than 0.");
                 return redirect()->back()->withInput();
             }
 
@@ -186,15 +197,15 @@ class PaymentsController extends Controller
         $user = auth()->user();
         $tanentId = null;
 
-       if ($user->tanent) {
+        if ($user->tanent) {
             $tanentId = $user->tanent->id;
             $users = User::whereHas('expert', function ($query) use ($tanentId) {
                 $query->where('tanent_id', $tanentId);
             })
-            // ->orWhereHas('expert', function ($query) use ($tanentId) {
-            //     $query->where('tanent_id', $tanentId);
-            // })
-            ->orderBy('id', 'asc')->get();
+                // ->orWhereHas('expert', function ($query) use ($tanentId) {
+                //     $query->where('tanent_id', $tanentId);
+                // })
+                ->orderBy('id', 'asc')->get();
             $projects = Project::where('tanent_id', $tanentId)
                 ->where('status', 'completed')
                 ->orderBy('id', 'asc')->get();
@@ -206,8 +217,8 @@ class PaymentsController extends Controller
             $projects = Project::whereHas('client', function ($query) use ($user) {
                 $query->where('client_id', $user->client->id);
             })
-            ->where('status', 'completed')
-            ->orderBy('id', 'asc')->get();
+                ->where('status', 'completed')
+                ->orderBy('id', 'asc')->get();
         }
 
         if (!$tanentId) {
@@ -257,12 +268,21 @@ class PaymentsController extends Controller
         try {
             $project = Project::find($payment->project_id);
             $projectBudget = $project->budget;
+            if (auth()->user()->hasRole('client')) {
+                if ($request->amount != $projectBudget) {
+                    flash()->options([
+                        'timeout' => 3000,
+                        'position' => 'bottom-center',
+                    ])->error("Payment Amount Must Be Equal to the project's budget.");
+                    return redirect()->back()->withInput();
+                }
+            }
 
-            if ($request->amount != $projectBudget) {
+            if ($request->amount <= 0) {
                 flash()->options([
                     'timeout' => 3000,
                     'position' => 'bottom-center',
-                ])->error("Payment Amount Must Be Equal to the project's budget.");
+                ])->error("Payment Amount Must be higher than 0.");
                 return redirect()->back()->withInput();
             }
 

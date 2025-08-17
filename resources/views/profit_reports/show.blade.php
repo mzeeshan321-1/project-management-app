@@ -47,6 +47,14 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th>Project Approval</th>
+                                        <td>
+                                            <span class="badge bg-{{ $profit->project->approval_status == 1 ? 'success' : 'warning' }}">
+                                                {{ ucfirst($profit->project->approval_status == 1 ? 'Approved' : 'Pending') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th>Project Status</th>
                                         <td>
                                             <span class="badge bg-success">
@@ -75,20 +83,12 @@
                                         <td>${{ number_format($profit->payment_amount, 2) }}</td>
                                     </tr>
                                     <tr class="table-{{ $profit->net_profit >= 0 ? 'success' : 'danger' }}">
-                                        <th>Net Profit</th>
+                                        <th>{{ $profit->net_profit <= 0 ? 'Net Loss' : 'Net Profit' }}</th>
                                         <td>${{ number_format($profit->net_profit, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Profit Percentage</th>
                                         <td>{{ number_format($profit->profit_percentage, 2) }}%</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Status</th>
-                                        <td>
-                                            <span class="badge bg-{{ $profit->status === 'calculated' ? 'success' : 'warning' }}">
-                                                {{ ucfirst($profit->status) }}
-                                            </span>
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -121,6 +121,14 @@
                                             </span>
                                         </td>
                                     </tr>
+                                    {{-- <tr>
+                                        <th>type</th>
+                                        <td>
+                                            <span class="badge bg-{{ $profit->payment->type === 'credit' ? 'success' : 'warning' }}">
+                                                {{ ucfirst($profit->payment->type) }}
+                                            </span>
+                                        </td>
+                                    </tr> --}}
                                     <tr>
                                         <th>Date</th>
                                         <td>{{ $profit->payment->created_at->format('M d, Y') }}</td>

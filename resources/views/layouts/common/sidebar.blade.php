@@ -46,8 +46,16 @@
         @endcan
 
         <!-- Projects & Tasks -->
-        @canany(['manage projects', 'view projects', 'assign projects', 'view tasks', 'manage tasks', 'request new
-            projects', 'update project status'])
+        @canany([
+            'manage projects',
+            'view projects',
+            'assign projects',
+            'view tasks',
+            'manage tasks',
+            'request new
+            projects',
+            'update project status',
+            ])
             <li class="nav-heading">Project Management</li>
         @endcanany
 
@@ -97,7 +105,8 @@
 
             @canany(['view reports', 'manage reports'])
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('profits.*') ? '' : 'collapsed' }}" href="{{ route('profits.index') }}">
+                    <a class="nav-link {{ request()->routeIs('profits.*') ? '' : 'collapsed' }}"
+                        href="{{ route('profits.index') }}">
                         <i class="bi bi-graph-up"></i>
                         <span>Profit Reports</span>
                     </a>
@@ -109,7 +118,8 @@
         @canany(['upload project deliverables', 'manage project deliverables', 'update project dileverables'])
             <li class="nav-heading">Documents</li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('files.*') ? '' : 'collapsed' }}" href="{{ route('files.index') }}">
+                <a class="nav-link {{ request()->routeIs('files.*') ? '' : 'collapsed' }}"
+                    href="{{ route('files.index') }}">
                     <i class="bi bi-files"></i>
                     <span>File Manager</span>
                 </a>
@@ -119,18 +129,19 @@
         <!-- Account -->
         <li class="nav-heading">Account</li>
         @can('view profile')
-            <li class="nav-item">
-                <a class="nav-link" href="">
-                    <i class="bi bi-person"></i>
-                    <span>Profile</span>
-                </a>
+            <a class="nav-link {{ request()->routeIs('profile.index') ? '' : 'collapsed' }}"
+                href="{{ route('profile.index') }}">
+                <i class="bi bi-person"></i>
+                <span>Profile</span>
+            </a>
             </li>
         @endcan
 
         <!-- Settings -->
-        @canany(['view settings', 'manage settings'])
+        @canany(['manage settings'])
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link {{ request()->routeIs('settings.*') ? '' : 'collapsed' }}"
+                    href="{{ route('settings.index') }}">
                     <i class="bi bi-gear"></i>
                     <span>Settings</span>
                 </a>

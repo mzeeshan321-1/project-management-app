@@ -23,7 +23,7 @@
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         <h2 class="text-center mb-3">{{ $project->title }}</h2>
-                        @role('middleman')
+                        @role(['middleman', 'client'])
                             <h3>
                                 <span class="text-muted small">Budget: </span>
                                 <span class="fw-bold">${{ number_format($project->budget, 2) }}</span>
@@ -40,8 +40,10 @@
                                 <span class="badge bg-secondary px-3 py-2">Inactive</span>
                             @endif
                         </div>
-                        <span class="text-muted small fst-italic">Last Updated:
-                            {{ $project->updated_at->diffForHumans() }}</span>
+                        @can('update project status')
+                            <span class="text-muted small fst-italic">Last Updated:
+                                {{ $project->updated_at->diffForHumans() }}</span>
+                        @endcan
                         <div class="project-dates mt-4 text-center">
                             <p class="small mb-1">
                                 <i class="bi bi-calendar-event text-primary"></i> Start Date:
@@ -95,9 +97,9 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Project Approval</h5>
-                                <p>Once you approve the project, you will be prompted for payment.</p>
                                 @if ($project->status == 'completed' && !$project->approval_status)
-                                    <button type="button" class="btn btn-secondary w-100" data-bs-toggle="modal"
+                                <p>Thank you for taking the time to review our work. Your approval is required to finalize the project and we appreciate your support.</p>
+                                    <button type="button" class="btn btn-success w-100" data-bs-toggle="modal"
                                         data-bs-target="#approvalModal">
                                         <i class="bi bi-check-circle"></i> Approve Project
                                     </button>
@@ -129,9 +131,11 @@
                             <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#documents">Documents</button>
                             </li>
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tasks">Tasks</button>
-                            </li>
+                            @can('update project status')
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tasks">Tasks</button>
+                                </li>
+                            @endcan
                         </ul>
 
                         <div class="tab-content pt-3">
@@ -163,25 +167,27 @@
                                                     </td>
                                                 </tr>
                                             @endcan
-                                            <tr>
-                                                <th class="bg-light">Task Overview</th>
-                                                <td>
-                                                    <div class="d-flex gap-2 flex-wrap">
-                                                        <span class="badge bg-primary">Total:
-                                                            {{ $project->tasks->count() }}</span>
-                                                        <span class="badge bg-success">Completed:
-                                                            {{ $project->tasks->where('status', 'completed')->count() }}</span>
-                                                        <span class="badge bg-warning">Pending:
-                                                            {{ $project->tasks->where('status', 'pending')->count() }}</span>
-                                                        <span class="badge bg-info">In Progress:
-                                                            {{ $project->tasks->where('status', 'in_progress')->count() }}</span>
-                                                        <span class="badge bg-secondary">On Hold:
-                                                            {{ $project->tasks->where('status', 'on_hold')->count() }}</span>
-                                                        <span class="badge bg-danger">Cancelled:
-                                                            {{ $project->tasks->where('status', 'cancelled')->count() }}</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            @can('update project status')
+                                                <tr>
+                                                    <th class="bg-light">Task Overview</th>
+                                                    <td>
+                                                        <div class="d-flex gap-2 flex-wrap">
+                                                            <span class="badge bg-primary">Total:
+                                                                {{ $project->tasks->count() }}</span>
+                                                            <span class="badge bg-success">Completed:
+                                                                {{ $project->tasks->where('status', 'completed')->count() }}</span>
+                                                            <span class="badge bg-warning">Pending:
+                                                                {{ $project->tasks->where('status', 'pending')->count() }}</span>
+                                                            <span class="badge bg-info">In Progress:
+                                                                {{ $project->tasks->where('status', 'in_progress')->count() }}</span>
+                                                            <span class="badge bg-secondary">On Hold:
+                                                                {{ $project->tasks->where('status', 'on_hold')->count() }}</span>
+                                                            <span class="badge bg-danger">Cancelled:
+                                                                {{ $project->tasks->where('status', 'cancelled')->count() }}</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endcan
                                             <tr>
                                                 <th class="bg-light">Documents</th>
                                                 <td>
@@ -318,64 +324,66 @@
                                 </div>
                             </div>
 
-                            <!-- Tasks Tab -->
-                            <div class="tab-pane fade" id="tasks">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="card-title">Project Tasks</h5>
-                                    @can('manage tasks')
-                                        <a href="{{ route('tasks.create', ['project_id' => $project->id]) }}"
-                                            class="btn btn-primary btn-sm">
-                                            <i class="bi bi-plus-lg"></i> Add Task
-                                        </a>
-                                    @endcan
-                                </div>
+                            @can('update project status')
+                                <!-- Tasks Tab -->
+                                <div class="tab-pane fade" id="tasks">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title">Project Tasks</h5>
+                                        @can('manage tasks')
+                                            <a href="{{ route('tasks.create', ['project_id' => $project->id]) }}"
+                                                class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-lg"></i> Add Task
+                                            </a>
+                                        @endcan
+                                    </div>
 
-                                <div class="task-list">
-                                    @forelse($project->tasks as $task)
-                                        <div class="card mb-3">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <h5 class="card-title mb-0">{{ $task->title }}</h5>
-                                                    <div class="task-status">
-                                                        @if ($task->status == 'pending')
-                                                            <span class="badge bg-warning">Pending</span>
-                                                        @elseif($task->status == 'in_progress')
-                                                            <span class="badge bg-info">In Progress</span>
-                                                        @elseif($task->status == 'completed')
-                                                            <span class="badge bg-success">Completed</span>
-                                                        @elseif($task->status == 'on_hold')
-                                                            <span class="badge bg-secondary">On Hold</span>
-                                                        @else
-                                                            <span class="badge bg-danger">Cancelled</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <p class="card-text mt-2">{{ Str::limit($task->description, 100) }}</p>
-                                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                                    <div class="task-meta">
-                                                        <small class="text-muted">
-                                                            <i class="bi bi-calendar"></i> Due:
-                                                            {{ $task->due_date ? date('M d, Y', strtotime($task->due_date)) : 'Not Set' }}
-                                                        </small>
-                                                    </div>
-                                                    @can('manage tasks')
-                                                        <div class="task-actions">
-                                                            <a href="{{ route('tasks.edit', $task->id) }}"
-                                                                class="btn btn-sm btn-outline-primary">
-                                                                <i class="bi bi-pencil"></i>
-                                                            </a>
+                                    <div class="task-list">
+                                        @forelse($project->tasks as $task)
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h5 class="card-title mb-0">{{ $task->title }}</h5>
+                                                        <div class="task-status">
+                                                            @if ($task->status == 'pending')
+                                                                <span class="badge bg-warning">Pending</span>
+                                                            @elseif($task->status == 'in_progress')
+                                                                <span class="badge bg-info">In Progress</span>
+                                                            @elseif($task->status == 'completed')
+                                                                <span class="badge bg-success">Completed</span>
+                                                            @elseif($task->status == 'on_hold')
+                                                                <span class="badge bg-secondary">On Hold</span>
+                                                            @else
+                                                                <span class="badge bg-danger">Cancelled</span>
+                                                            @endif
                                                         </div>
-                                                    @endcan
+                                                    </div>
+                                                    <p class="card-text mt-2">{{ Str::limit($task->description, 100) }}</p>
+                                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                                        <div class="task-meta">
+                                                            <small class="text-muted">
+                                                                <i class="bi bi-calendar"></i> Due:
+                                                                {{ $task->due_date ? date('M d, Y', strtotime($task->due_date)) : 'Not Set' }}
+                                                            </small>
+                                                        </div>
+                                                        @can('manage tasks')
+                                                            <div class="task-actions">
+                                                                <a href="{{ route('tasks.edit', $task->id) }}"
+                                                                    class="btn btn-sm btn-outline-primary">
+                                                                    <i class="bi bi-pencil"></i>
+                                                                </a>
+                                                            </div>
+                                                        @endcan
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @empty
-                                        <div class="text-center py-3">
-                                            <p class="text-muted">No tasks created for this project yet.</p>
-                                        </div>
-                                    @endforelse
+                                        @empty
+                                            <div class="text-center py-3">
+                                                <p class="text-muted">No tasks created for this project yet.</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
                                 </div>
-                            </div>
+                            @endcan
                         </div>
                     </div>
                 </div>

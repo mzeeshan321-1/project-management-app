@@ -13,6 +13,7 @@ class Profit extends Model
         'tanent_id',
         'project_id',
         'payment_id',
+        'expert_cost',
         'profit',
         'profit_percentage',
         'note'
@@ -46,7 +47,7 @@ class Profit extends Model
      * Calculate profit from given data
      */
     public static function calculateProfit($projectBudget, $expertCost)
-    {
+    {   
         $netProfit = $projectBudget - $expertCost;
         $profitPercentage = $projectBudget > 0 ? ($netProfit / $projectBudget) * 100 : 0;
 

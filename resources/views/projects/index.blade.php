@@ -14,7 +14,6 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    {{-- {{ dd($projects) }} --}}
     <section class="section">
         <div class="row">
             <div class="col-lg-12">
@@ -73,7 +72,11 @@
                                                 <td class="text-center align-middle">
                                                     {{ $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('d-M-Y') : 'N/A' }}
                                                 </td>
-                                                <td class="text-center align-middle">{{ $project->budget ?? 'N/A' }}</td>
+                                                @role(['middleman', 'client'])
+                                                    <td class="text-center align-middle">{{ $project->budget ?? 'N/A' }}</td>
+                                                    @elserole('expert')
+                                                    <td class="text-center align-middle">{{ $project->projectAssigns->sum('budget') ?? 'N/A' }}</td>
+                                                @endrole
                                                 <td class="text-center align-middle">
                                                     @if ($project->status == 'in_progress')
                                                         <span

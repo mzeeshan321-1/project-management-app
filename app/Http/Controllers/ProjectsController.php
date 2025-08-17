@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
-use App\Models\Profit;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +33,7 @@ class ProjectsController extends Controller
             $tanentId = $user->expert->tanent_id;
             $expertId = $user->expert->id;
             // Only show projects assigned to this expert
-            $projects = Project::with('client')
+            $projects = Project::with('client', 'projectAssigns')
                 ->where('tanent_id', $tanentId)
                 ->whereHas('projectAssigns', function ($query) use ($expertId) {
                     $query->where('expert_id', $expertId);
@@ -233,8 +232,6 @@ class ProjectsController extends Controller
                 'status' => $request->status,
             ]);
 
-            $this->calculateProfit();
-
             flash()->options([
                 'timeout' => 3000,
                 'position' => 'bottom-center',
@@ -311,8 +308,6 @@ class ProjectsController extends Controller
                 'status' => $request->status,
             ]);
 
-            $this->calculateProfit();
-
             flash()->options([
                 'timeout' => 3000,
                 'position' => 'bottom-center',
@@ -327,60 +322,4 @@ class ProjectsController extends Controller
             return redirect()->back()->withInput();
         }
     }
-
-    /**
-     * Calculate profit.
-     */
-    public function calculateProfit()
-    {
-        // Get project with its assignments and payments
-        $projects = Project::with(['projectAssigns', 'payments'])->where('tanent_id', auth()->user()->tanent->id)
-        ->orderBy('id', 'asc')->get();
-        foreach ($projects as $project) {
-            if ($project->projectAssigns->count() === '0') {
-                flash()->options([
-                    'timeout' => 3000, // 3 seconds
-                    'position' => 'bottom-center',
-                ])->error('No assignments found for the project.');
-                return redirect()->back();
-            }
-
-            if ($project->status === 'completed' && $project->projectAssigns->count() > '0') {
-                try {
-                    // Get project budget
-                    $projectBudget = $project->budget;
-
-                    // Calculate total expert cost from assignments (0 if no assignments)
-                    $expertCost = $project->projectAssigns->sum('budget') ?? 0;
-
-                    // Get latest payment if exists
-                    $paymentId = $project->payments->last()->id ?? null;
-
-                    // Calculate profit using the model's method
-                    $profitCalc = Profit::calculateProfit($projectBudget, $expertCost);
-
-                    // Create or update profit record
-                    Profit::updateOrCreate(
-                        [
-                            'project_id' => $project->id,
-                            'payment_id' => $paymentId
-                        ],
-                        [
-                            'tanent_id' => $project->tanent_id,
-                            'profit' => $profitCalc['profit'],
-                            'profit_percentage' => $profitCalc['profit_percentage'],
-                        ]
-                    );
-                } catch (\Exception $e) {
-                    flash()->options([
-                        'timeout' => 3000, // 3 seconds
-                        'position' => 'bottom-center',
-                    ])->error('Error updating project status: ' . $e->getMessage());
-                    return redirect()->back()->withInput();
-                }
-            }
-        }
-    }
-
 }
-
