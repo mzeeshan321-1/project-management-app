@@ -24,8 +24,10 @@ class PaymentsController extends Controller
         $sender = auth()->user()->id;
 
         $payments = Payment::with(['sender', 'receiver', 'project'])
-            ->where('sender_id', $sender)
-            ->orWhere('reciever_id', $sender)
+            ->where(function ($query) use ($sender) {
+                $query->where('sender_id', $sender)
+                    ->orWhere('reciever_id', $sender);
+            })
             ->orderBy('id', 'asc')
             ->get();
         return view('payments.index', compact('payments'));
@@ -47,9 +49,9 @@ class PaymentsController extends Controller
             $users = User::whereHas('expert', function ($query) use ($tanentId) {
                 $query->where('tanent_id', $tanentId);
             })
-                // ->orWhereHas('client', function ($query) use ($tanentId) {
-                //     $query->where('tanent_id', $tanentId);
-                // })
+                ->orWhereHas('client', function ($query) use ($tanentId) {
+                    $query->where('tanent_id', $tanentId);
+                })
                 ->orderBy('id', 'asc')->get();
             $projects = Project::where('tanent_id', $tanentId)
                 ->where('status', 'completed')
@@ -199,12 +201,12 @@ class PaymentsController extends Controller
 
         if ($user->tanent) {
             $tanentId = $user->tanent->id;
-            $users = User::whereHas('expert', function ($query) use ($tanentId) {
+            $users = User::whereHas('client', function ($query) use ($tanentId) {
                 $query->where('tanent_id', $tanentId);
             })
-                // ->orWhereHas('expert', function ($query) use ($tanentId) {
-                //     $query->where('tanent_id', $tanentId);
-                // })
+                ->orWhereHas('expert', function ($query) use ($tanentId) {
+                    $query->where('tanent_id', $tanentId);
+                })
                 ->orderBy('id', 'asc')->get();
             $projects = Project::where('tanent_id', $tanentId)
                 ->where('status', 'completed')
@@ -305,7 +307,9 @@ class PaymentsController extends Controller
                 $imageName = $payment->upload_invoice;
             }
 
+            $user = auth()->user()->id;
             $payment->update([
+                'sender_id' => $user,
                 'project_id' => $request->project_id,
                 'reciever_id' => $request->reciever_id,
                 'note' => $request->note,
@@ -365,6 +369,53 @@ class PaymentsController extends Controller
                 'position' => 'bottom-center',
             ])->success('Payment ID no: ' . $id . ' Deleted Successfully!');
             return redirect()->route('payments.index');
+        } catch (\Exception $e) {
+            flash()->options([
+                'timeout' => 3000, // 3 seconds
+                'position' => 'bottom-center',
+            ])->error($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
+    /**
+     * Update the status of the specified resource.
+     */
+    public function updateStatus(Request $request, string $id)
+    {
+        $payment = Payment::find($id);
+        if (empty($payment)) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Project ID no: ' . $id . ' Not found!');
+            return redirect()->back();
+        }
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:pending,received,returned',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            flash()->options([
+                'timeout' => 3000, // 3 seconds
+                'position' => 'bottom-center',
+            ])->error('Validation failed: ' . implode(', ', $errors));
+            return redirect()->back();
+        }
+
+        try {
+            $payment->update([
+                'status' => $request->status,
+            ]);
+
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->success('Payments ID no: ' . $id . ' Status Updated Successfully!');
+
+            return redirect()->back();
         } catch (\Exception $e) {
             flash()->options([
                 'timeout' => 3000, // 3 seconds

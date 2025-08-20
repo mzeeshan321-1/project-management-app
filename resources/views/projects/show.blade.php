@@ -403,7 +403,7 @@
                                 approval.</p>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
-                            <a href="{{ route('payments.create') }}" class="btn btn-primary ms-2">Proceed to Payment</a>
+                            <a href="{{ route('payments.create', ['project_id' => $project->id]) }}" class="btn btn-primary ms-2">Proceed to Payment</a>
                         </div>
                     </div>
                 </div>

@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/payments', [PaymentsController::class, 'store'])->name('payments.store');
     Route::get('/payments/{id}/edit', [PaymentsController::class, 'edit'])->name('payments.edit');
     Route::put('/payments/{id}', [PaymentsController::class, 'update'])->name('payments.update');
+    Route::put('/payments/{id}/status', [PaymentsController::class, 'UpdateStatus'])->name('payments.status');
     Route::delete('/payments/{id}', [PaymentsController::class, 'destroy'])->name('payments.delete');
 
     // Files Routes

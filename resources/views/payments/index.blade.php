@@ -54,7 +54,7 @@
                                         @foreach ($payments as $payment)
                                             <tr>
                                                 <td class="text-center align-middle">{{ $payment->id }}</td>
-                                                <td class="text-center align-middle">{{ $payment->project->title }}</td>
+                                                <td class="text-center align-middle">{{ $payment->project->title }}({{ $payment->project->id }})</td>
                                                 <td class="text-center align-middle">
                                                     {{ $payment->sender ? $payment->sender->first_name . ' ' . $payment->sender->last_name : 'N/A' }}
                                                 </td>
@@ -77,16 +77,37 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    @if ($payment->status == 'pending')
-                                                        <span
-                                                            class="badge bg-secondary">{{ strtoupper($payment->status) }}</span>
-                                                    @elseif ($payment->status == 'received')
-                                                        <span
-                                                            class="badge bg-success">{{ strtoupper($payment->status) }}</span>
-                                                    @elseif ($payment->status == 'returned')
-                                                        <span
-                                                            class="badge bg-danger">{{ strtoupper($payment->status) }}</span>
-                                                    @endif
+                                                    @role('middleman')
+                                                        <div class="dropdown position-static">
+                                                            <button class="btn btn-{{ $payment->status == 'pending' ? 'secondary' : ($payment->status == 'received' ? 'success' : 'danger') }} btn-sm rounded-pill px-2 py-1"
+                                                                type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                                                style="font-size: 0.8rem">
+                                                                <span class="d-flex align-items-center">
+                                                                    {{ strtoupper($payment->status) }}
+                                                                    <i class="bi bi-chevron-down ms-1"></i>
+                                                                </span>
+                                                            </button>
+                                                            <form method="POST"
+                                                                action="{{ route('payments.status', $payment->id) }}">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <ul class="dropdown-menu dropdown-menu-end"
+                                                                    style="min-width: 100px">
+                                                                    <li><button type="submit" class="dropdown-item"
+                                                                            name="status" value="pending">Pending</button>
+                                                                    </li>
+                                                                    <li><button type="submit" class="dropdown-item"
+                                                                            name="status" value="received">Received</button>
+                                                                    </li>
+                                                                    <li><button type="submit" class="dropdown-item"
+                                                                            name="status" value="returned">Returned</button>
+                                                                    </li>
+                                                                </ul>
+                                                            </form>
+                                                        </div>
+                                                    @else
+                                                        <span class="badge bg-{{ $payment->status == 'pending' ? 'secondary' : ($payment->status == 'received' ? 'success' : 'danger') }}">{{ strtoupper($payment->status) }}</span>
+                                                    @endrole
                                                 </td>
                                                 @can('manage payments')
                                                     <td class="text-center align-middle">

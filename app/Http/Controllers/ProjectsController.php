@@ -57,7 +57,22 @@ class ProjectsController extends Controller
             ])->error('Tenant not found for the current user.');
             return redirect()->back();
         }
-        return view('projects.index', compact('projects'));
+
+        // Calculate statistics for cards
+        $statistics = [
+            'total_projects' => $projects->count(),
+            'completed_projects' => $projects->where('status', 'completed')->count(),
+            'in_progress_projects' => $projects->where('status', 'in_progress')->count(),
+            'cancelled_projects' => $projects->where('status', 'cancelled')->count(),
+            'inactive_projects' => $projects->where('status', 'inactive')->count(),
+            'total_budget' => $projects->sum('budget'),
+            'completed_budget' => $projects->where('status', 'completed')->sum('budget'),
+            'overdue_projects' => $projects->filter(function ($project) {
+                return $project->deadline && \Carbon\Carbon::parse($project->deadline)->isPast() && $project->status !== 'completed';
+            })->count(),
+        ];
+
+        return view('projects.index', compact('projects', 'statistics'));
     }
 
     /**
@@ -174,6 +189,10 @@ class ProjectsController extends Controller
             ])->error('Project ID no: ' . $id . ' Not found!');
             return redirect()->back();
         }
+
+        $project->start_date = Carbon::createFromFormat('Y-m-d', $project->start_date)->format('d-M-Y');
+        $project->deadline = Carbon::createFromFormat('Y-m-d', $project->deadline)->format('d-M-Y');
+
         return view('projects.edit', compact('clients', 'project'));
     }
 

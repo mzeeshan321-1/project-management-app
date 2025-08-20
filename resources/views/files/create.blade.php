@@ -30,7 +30,9 @@
                             <option class="text-center" value="" selected disabled>--- Select a Project ---</option>
                             @if ($projects->isNotEmpty())
                                 @foreach ($projects as $project)
-                                    <option value="{{ $project->id }}">{{ $project->title }}</option>
+                                    <option  value="{{ $project->id }}" {{ request()->query('project_id') == $project->id ? 'selected' : '' }}>
+                                        {{ $project->title }}
+                                    </option>
                                 @endforeach
                             @endif
                         </select>

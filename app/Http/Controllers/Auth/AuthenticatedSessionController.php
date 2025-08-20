@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
                 'position' => 'bottom-center',
             ])->success('Login successful! Welcome back: ' . $user->first_name . '.');
 
-            return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('dashboard', absolute: false));           
         } catch (\Exception $e) {
             flash()->error('Login failed: ' . $e->getMessage());
             return redirect()->back();

@@ -28,39 +28,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display a specific user's profile (for authorized users).
-     */
-    public function show(Request $request, $id): View
-    {
-        $authUser = $request->user();
-        
-        // Find the user whose profile is being requested
-        $user = User::with(['roles', 'tanent.user', 'expert', 'client'])->findOrFail($id);
-        
-        // Check if the authenticated user can view this profile
-        if ($authUser->hasRole('super-admin')) {
-            // Super admin can see all profiles
-            return view('profile.edit', [
-                'user' => $user,
-            ]);
-        } elseif ($authUser->hasRole('middleman')) {
-            // Middleman can see their own experts and clients
-            $tanent = $authUser->tanent;
-            
-            // Check if the user is an expert or client of this middleman
-            if (($user->expert && $user->expert->tanent_id == $tanent->id) ||
-                ($user->client && $user->client->tanent_id == $tanent->id)) {
-                return view('profile.edit', [
-                    'user' => $user,
-                ]);
-            }
-        }
-        
-        // If not authorized, show their own profile
-        return redirect()->route('profile.edit');
-    }
-
-    /**
      * Display a list of profiles based on user role.
      */
     public function index(Request $request): View
@@ -83,7 +50,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
