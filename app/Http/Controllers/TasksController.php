@@ -21,7 +21,7 @@ class TasksController extends Controller
         }
         $user = auth()->user();
         $tanentId = null;
-        $projects = collect();
+        $tasks = collect();
 
         if ($user->tanent) {
             $tanentId = $user->tanent->id;
@@ -50,7 +50,23 @@ class TasksController extends Controller
             ])->error('Tenant not found for the current user.');
             return redirect()->back();
         }
-        return view('tasks.index', compact('tasks'));
+
+        $projects = Project::where('tanent_id', $tanentId)->get();
+        // Calculate statistics for cards
+        $statistics = [
+            'total_projects' => $projects->count(),
+            'total_tasks' => $tasks->count(),
+            'pending_tasks' => $tasks->where('status', 'pending')->count(),
+            'on_hold_tasks' => $tasks->where('status', 'on_hold')->count(),
+            'completed_tasks' => $tasks->where('status', 'completed')->count(),
+            'in_progress_tasks' => $tasks->where('status', 'in_progress')->count(),
+            'cancelled_tasks' => $tasks->where('status', 'cancelled')->count(),
+            'overdue_tasks' => $tasks->filter(function ($task) {
+                return $task->due_date && Carbon::parse($task->due_date)->isPast() && $task->status !== 'completed';
+            })->count(),
+        ];
+
+        return view('tasks.index', compact('tasks', 'statistics'));
     }
 
     /**
@@ -246,12 +262,12 @@ class TasksController extends Controller
         }
 
         $user = auth()->user();
-        
+
         // Determine validation rules based on user role
         $validationRules = [
             'status' => 'required|in:in_progress,completed,pending,cancelled,on_hold',
         ];
-        
+
         // Add priority validation only for middleman role
         if ($user->hasRole('middleman')) {
             $validationRules['priority'] = 'required|in:low,medium,high';
@@ -271,12 +287,12 @@ class TasksController extends Controller
         try {
             // Prepare update data based on user role
             $updateData = ['status' => $request->status];
-            
+
             // Only update priority if user has middleman role
             if ($user->hasRole('middleman') && $request->has('priority')) {
                 $updateData['priority'] = $request->priority;
             }
-            
+
             $task->update($updateData);
 
             flash()->options([

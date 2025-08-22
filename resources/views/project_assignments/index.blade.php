@@ -14,9 +14,61 @@
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    {{-- {{ dd($projects) }} --}}
     <section class="section">
         <div class="row">
+            <!-- Summary Stats -->
+            <div class="col-xxl-3 col-md-4">
+                <div class="card info-card revenue-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Project</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-folder"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>{{ $projects->count() }}</h6>
+                                <span class="text-muted small pt-2 ps-1">Projects</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-4">
+                <div class="card info-card sales-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Project Assigned</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>{{ $project_assignments->count() }}</h6>
+                                <span class="text-muted small pt-2 ps-1">Assigned</span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-4">
+                <div class="card info-card customers-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Budget Assigned</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>${{ number_format($project_assignments->sum('budget'), 2) }}</h6>
+                                <span class="text-muted small pt-2 ps-1">Budget</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">

@@ -18,76 +18,64 @@
     <section class="section">
         <div class="row">
             <!-- Summary Stats -->
-            <div class="col-12">
-                <div class="card">
+            <div class="col-xxl-3 col-md-6">
+                <div class="card info-card revenue-card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-xxl-3 col-md-6">
-                                <div class="card info-card revenue-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Total Projects</h5>
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-folder"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>{{ $profits->count() }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <h5 class="card-title">Total Projects</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-folder"></i>
                             </div>
-
-                            <div class="col-xxl-3 col-md-6">
-                                <div class="card info-card sales-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Total Project Budgets</h5>
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-currency-dollar"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>${{ number_format($profits->sum('project_budget'), 2) }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="ps-3">
+                                <h6>{{ $profits->count() }}</h6>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="col-xxl-3 col-md-6">
-                                <div class="card info-card customers-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Total Expert Costs</h5>
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-people"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>${{ number_format($profits->sum('expert_cost'), 2) }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="col-xxl-3 col-md-6">
+                <div class="card info-card sales-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Project Budgets</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-currency-dollar"></i>
                             </div>
+                            <div class="ps-3">
+                                <h6>${{ number_format($profits->sum('project_budget'), 2) }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="col-xxl-3 col-md-6">
-                                <div class="card info-card revenue-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Total Net Profit</h5>
-                                        <div class="d-flex align-items-center">
-                                            <div
-                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-graph-up-arrow"></i>
-                                            </div>
-                                            <div class="ps-3">
-                                                <h6>${{ number_format($profits->sum('net_profit'), 2) }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="col-xxl-3 col-md-6">
+                <div class="card info-card customers-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Expert Costs</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>${{ number_format($profits->sum('expert_cost'), 2) }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-3 col-md-6">
+                <div class="card info-card revenue-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Net Profit</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>${{ number_format($profits->sum('net_profit'), 2) }}</h6>
                             </div>
                         </div>
                     </div>
@@ -108,7 +96,9 @@
                                         <th class="text-center align-middle">Project Budget</th>
                                         <th class="text-center align-middle">Expert Cost</th>
                                         <th class="text-center align-middle">Payment Amount</th>
-                                        <th class="text-center align-middle">{{ $profits->sum('profit_percentage') ? ( $profits->sum('profit_percentage') > 0 ? 'Net Profit' : 'Net Loss' ) : 'Net Profit' }}</th>
+                                        <th class="text-center align-middle">
+                                            {{ $profits->sum('profit_percentage') ? ($profits->sum('profit_percentage') > 0 ? 'Net Profit' : 'Net Loss') : 'Net Profit' }}
+                                        </th>
                                         <th class="text-center align-middle">Profit %</th>
                                         <th class="text-center align-middle">Status</th>
                                         <th class="text-center align-middle">Actions</th>
@@ -118,11 +108,16 @@
                                     @forelse($profits as $profit)
                                         <tr>
                                             <td class="text-center align-middle">{{ $profit->id }}</td>
-                                            <td class="text-center align-middle">{{ $profit->project->title }}</td>
+                                            <td class="text-center align-middle">
+                                                <a class="fw-bold" href="{{ route('profits.show', $profit->project->id) }}">
+                                                    {{ $profit->project->title }}
+                                                </a>
+                                            </td>
                                             <td class="text-center align-middle">
                                                 ${{ number_format($profit->project->budget, 2) }}</td>
                                             <td class="text-center align-middle">
-                                                {{ $profit->expert_cost ? '$' . number_format($profit->expert_cost, 2) : 'N/A' }}</td>
+                                                {{ $profit->expert_cost ? '$' . number_format($profit->expert_cost, 2) : 'N/A' }}
+                                            </td>
                                             <td class="text-center align-middle">
                                                 {{ $profit->payment ? '$' . number_format($profit->payment->amount, 2) : 'N/A' }}
                                             </td>

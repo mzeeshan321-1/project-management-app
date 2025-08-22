@@ -8,7 +8,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
+        <a href="{{ route('dashboard')}}" class="logo d-flex align-items-center">
             <img src="{{ asset('assets/img/logo.png') }}" alt="">
             <span class="d-none d-lg-block text-nowrap">
                 {{ strtoupper(auth()->user()->getRoleNames()->first()) }}
@@ -19,9 +19,10 @@
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
-
             <li class="nav-item">
-                <button class="theme-toggle" title="Toggle Dark/Light Mode">
+                <button class="theme-toggle nav-icon"
+                        aria-label="Toggle between light and dark theme"
+                        type="button">
                     <i class="bi bi-moon-fill"></i>
                 </button>
             </li>

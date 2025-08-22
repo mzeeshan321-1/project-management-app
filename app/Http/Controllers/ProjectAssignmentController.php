@@ -20,8 +20,10 @@ class ProjectAssignmentController extends Controller
         if (!auth()->user()->hasPermissionTo('assign projects')) {
             abort(403, 'You do not have permission to view this page.');
         }
+        $tanentId = auth()->user()->tanent->id;
+        $projects = Project::where('tanent_id', $tanentId)->get();
         $project_assignments = ProjectAssign::with('expert', 'project')->where('tanent_id', auth()->user()->tanent->id)->orderBy('id', 'asc')->get();
-        return view('project_assignments.index', compact('project_assignments'));
+        return view('project_assignments.index', compact('project_assignments', 'projects'));
     }
 
     /**

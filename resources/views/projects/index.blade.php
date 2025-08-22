@@ -18,7 +18,6 @@
     <section class="section">
         <div class="row mb-4">
             <!-- Statistics Cards -->
-            <!-- Total Projects Card - Visible to all roles -->
             <div id="projects-carousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -28,7 +27,8 @@
                                     <div class="card-body">
                                         <h5 class="card-title">Total Projects</h5>
                                         <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <div
+                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-folder"></i>
                                             </div>
                                             <div class="ps-3">
@@ -44,7 +44,8 @@
                                     <div class="card-body">
                                         <h5 class="card-title">Completed Projects</h5>
                                         <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <div
+                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-check-circle"></i>
                                             </div>
                                             <div class="ps-3">
@@ -63,7 +64,8 @@
                                     <div class="card-body">
                                         <h5 class="card-title">In Progress</h5>
                                         <div class="d-flex align-items-center">
-                                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <div
+                                                class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                 <i class="bi bi-clock"></i>
                                             </div>
                                             <div class="ps-3">
@@ -84,7 +86,8 @@
                                         <div class="card-body">
                                             <h5 class="card-title">Total Budget</h5>
                                             <div class="d-flex align-items-center">
-                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                     <i class="bi bi-currency-dollar"></i>
                                                 </div>
                                                 <div class="ps-3">
@@ -106,11 +109,13 @@
                                         <div class="card-body">
                                             <h5 class="card-title">Overdue Projects</h5>
                                             <div class="d-flex align-items-center">
-                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                     <i class="bi bi-exclamation-triangle"></i>
                                                 </div>
                                                 <div class="ps-3">
-                                                    <h6 class="{{ $statistics['overdue_projects'] > 0 ? 'text-danger' : '' }}">
+                                                    <h6
+                                                        class="{{ $statistics['overdue_projects'] > 0 ? 'text-danger' : '' }}">
                                                         {{ $statistics['overdue_projects'] }}
                                                     </h6>
                                                     <span class="text-muted small pt-2 ps-1">past deadline</span>
@@ -127,11 +132,13 @@
                                         <div class="card-body">
                                             <h5 class="card-title">Cancelled Projects</h5>
                                             <div class="d-flex align-items-center">
-                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                <div
+                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                     <i class="bi bi-x-circle"></i>
                                                 </div>
                                                 <div class="ps-3">
-                                                    <h6 class="{{ $statistics['cancelled_projects'] > 0 ? 'text-danger' : '' }}">
+                                                    <h6
+                                                        class="{{ $statistics['cancelled_projects'] > 0 ? 'text-danger' : '' }}">
                                                         {{ $statistics['cancelled_projects'] }}
                                                     </h6>
                                                     <span class="text-muted small pt-2 ps-1">cancelled</span>
@@ -144,12 +151,10 @@
                         </div>
                     </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#projects-carousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon text-secondary" aria-hidden="false"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#projects-carousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon text-secondary" aria-hidden="false"></span>
+                <button class="carousel-control-next" type="button"
+                    data-bs-target="#projects-carousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-secondary rounded-circle border-0 d-none d-md-block"
+                        aria-hidden="false"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
@@ -173,12 +178,12 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th class="text-center align-middle">P.ID</th>
+                                        <th class="align-middle">Title</th>
                                         @role('middleman')
                                             <th class="text-center align-middle">Client</th>
                                             @elserole('client')
                                             <th class="text-center align-middle">Tanent</th>
                                         @endrole
-                                        <th class="align-middle">Title</th>
                                         <th class="text-center align-middle">Description</th>
                                         <th class="text-center align-middle">Start Date</th>
                                         <th class="text-center align-middle">Deadline</th>
@@ -192,6 +197,10 @@
                                         @foreach ($projects as $project)
                                             <tr>
                                                 <td class="text-center align-middle">{{ $project->id }}</td>
+                                                <td class="align-middle">
+                                                    <a class="fw-bold"
+                                                        href="{{ route('projects.show', $project->id) }}">{{ $project->title }}</a>
+                                                </td>
                                                 @role('middleman')
                                                     <td class="text-center align-middle">
                                                         {{ $project->client->user->first_name }}
@@ -201,7 +210,6 @@
                                                         {{ $project->tanent->user->first_name }}
                                                         {{ $project->tanent->user->last_name }}</td>
                                                 @endrole
-                                                <td class="align-middle">{{ $project->title }}</td>
                                                 <td class="text-center align-middle">{{ $project->description ?? 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">
