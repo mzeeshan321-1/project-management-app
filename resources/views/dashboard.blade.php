@@ -123,7 +123,7 @@
                                                                 </div>
                                                                 <div class="ps-3">
                                                                     <h6>{{ $projectAssignmentsCount }}</h6>
-                                                                    <span class="text-muted small pt-2 ps-1">Manage Assignments <i class="bi bi-arrow-right"></i></span>
+                                                                    <span class="text-muted small pt-2 ps-1">Project Assignments <i class="bi bi-arrow-right"></i></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -260,7 +260,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Recent Projects</h5>
-                                    <div class="activity text-nowrap">
+                                    <div class="activity">
                                         @forelse($recentProjects as $project)
                                             <div class="activity-item d-flex">
                                                 <div class="activite-label">{{ $project->created_at->format('d M') }}</div>
@@ -289,7 +289,7 @@
                                     <div class="activity">
                                         @forelse($pendingTasks as $task)
                                             <div class="activity-item d-flex">
-                                                <div class="activite-label">{{ $task->due_date ? $task->due_date->diffForHumans() : 'No deadline' }}</div>
+                                                <div class="activite-label">{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->diffForHumans() : 'No deadline' }}</div>
                                                 <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
                                                 <div class="activity-content">
                                                     <a href="{{ route('tasks.show', $task) }}" class="fw-bold text-dark">{{ $task->title }}</a>

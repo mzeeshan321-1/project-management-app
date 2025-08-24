@@ -36,37 +36,51 @@
                 @endrole
                 <div class="col-md-4">
                     <div class="form-floating">
-                        <select class="form-select" name="project_id" id="Project" aria-label="Project" required>
+                        <select class="form-select" name="project_id" id="Project" aria-label="Project" required {{ isset($selectedProject) ? 'readonly' : '' }}>
                             <option class="text-center" value="" selected disabled>--- Select a Project ---</option>
                             @if ($projects->isNotEmpty())
                                 @foreach ($projects as $project)
-                                    <option value="{{ $project->id }}" {{ request()->query('project_id') == $project->id ? 'selected' : '' }}>
+                                    <option value="{{ $project->id }}" 
+                                        {{ (isset($selectedProject) && $selectedProject->id == $project->id) || request()->query('project_id') == $project->id ? 'selected' : '' }}>
                                         {{ $project->title }}
                                     </option>
                                 @endforeach
                             @endif
                         </select>
+                        @if(isset($selectedProject))
+                            <input type="hidden" name="project_id" value="{{ $selectedProject->id }}">
+                        @endif
                         <label for="Project">Project</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating">
-                        <select class="form-select" name="reciever_id" id="Reciever" aria-label="Send To" required>
-                            <option class="text-center" value="" selected disabled>--- Select a Reciever ---</option>
-                            @if ($users->isNotEmpty())
+                        <select class="form-select" name="reciever_id" id="Reciever" aria-label="Send To" required {{ isset($selectedReceiver) ? 'readonly' : '' }}>
+                            <option class="text-center" value="" selected disabled>--- Select a Receiver ---</option>
+                            @if(isset($selectedReceiver))
+                                <option value="{{ $selectedReceiver->id }}" selected>
+                                    {{ $selectedReceiver->first_name }} {{ $selectedReceiver->last_name }}
+                                </option>
+                            @elseif($users->isNotEmpty())
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" {{ $user->id == $project->client_id ? 'selected' : '' }}>
+                                    <option value="{{ $user->id }}" {{ request()->query('project_id') && $projects->firstWhere('id', request()->query('project_id'))->client->id == $user->client->id ? 'selected' : '' }}>
                                         {{ $user->first_name }} {{ $user->last_name }}</option>
                                 @endforeach
                             @endif
                         </select>
+                        @if(isset($selectedReceiver))
+                            <input type="hidden" name="reciever_id" value="{{ $selectedReceiver->id }}">
+                        @endif
                         <label for="Reciever">Send To</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating">
-                        <input type="text" class="form-control" value="{{ old('amount') }}" name="amount" id="Amount"
-                            placeholder="Amount" required>
+                        <input type="text" class="form-control" 
+                            value="{{ isset($selectedProject) ? $selectedProject->budget : old('amount') }}" 
+                            name="amount" id="Amount"
+                            placeholder="Amount" required 
+                            {{ isset($selectedProject) ? 'readonly' : '' }}>
                         <label for="Amount">Amount</label>
                     </div>
                 </div>

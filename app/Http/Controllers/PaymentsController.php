@@ -49,23 +49,38 @@ class PaymentsController extends Controller
             $users = User::whereHas('expert', function ($query) use ($tanentId) {
                 $query->where('tanent_id', $tanentId);
             })
-                ->orWhereHas('client', function ($query) use ($tanentId) {
-                    $query->where('tanent_id', $tanentId);
-                })
+                // ->orWhereHas('client', function ($query) use ($tanentId) {
+                //     $query->where('tanent_id', $tanentId);
+                // })
                 ->orderBy('id', 'asc')->get();
+            
             $projects = Project::where('tanent_id', $tanentId)
                 ->where('status', 'completed')
-                ->orderBy('id', 'asc')->get();
+                ->whereNotExists(function ($query) {
+                    $query->select('id')
+                        ->from('payments')
+                        ->whereColumn('project_id', 'projects.id');
+                })
+                ->orderBy('id', 'asc')
+                ->get();
+
         } elseif ($user->client) {
             $tanentId = $user->client->tanent_id;
             $users = User::whereHas('tanent', function ($query) use ($tanentId) {
                 $query->where('id', $tanentId);
             })->orderBy('id', 'asc')->get();
+            
             $projects = Project::whereHas('client', function ($query) use ($user) {
                 $query->where('client_id', $user->client->id);
             })
-                ->where('status', 'completed')
-                ->orderBy('id', 'asc')->get();
+            ->where('status', 'completed')
+            ->whereNotExists(function ($query) {
+                $query->select('id')
+                    ->from('payments')
+                    ->whereColumn('project_id', 'projects.id');
+            })
+            ->orderBy('id', 'asc')
+            ->get();
         }
 
         if (!$tanentId) {
@@ -424,5 +439,87 @@ class PaymentsController extends Controller
             return redirect()->back()->withInput();
         }
     }
-}
 
+    /**
+     * Show the details of the specified resource.
+     */
+    public function details($id)
+    {
+        // Find project with all necessary relationships
+        $project = Project::with(['client.user', 'client.tanent.user'])->find($id);
+        
+        if (empty($project)) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Project not found.');
+            return redirect()->back();
+        }
+
+        // Verify all relationships exist
+        if (!$project->client || !$project->client->tanent) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Project client or tenant information is missing.');
+            return redirect()->back();
+        }
+
+        // Check if project already has a payment
+        $hasPayment = Payment::where('project_id', $id)->exists();
+        if ($hasPayment) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Payment already exists for this project.');
+            return redirect()->back();
+        }
+
+        $user = auth()->user();
+        
+        // Only allow access to client role
+        if (!$user->hasRole('client')) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Only clients can access payment details.');
+            return redirect()->back();
+        }
+
+        // Get the tenant (middleman) user for payment receiver
+        $tanentId = $project->client->tanent_id;
+
+        // Get list of all potential receivers
+        $users = User::whereHas('tanent', function ($query) use ($tanentId) {
+            $query->where('id', $tanentId);
+        })->orderBy('id', 'asc')->get();
+
+        // Get list of eligible projects
+        $projects = Project::whereHas('client', function ($query) use ($user) {
+            $query->where('client_id', $user->client->id);
+        })
+        ->where('status', 'completed')
+        ->orderBy('id', 'asc')
+        ->get();
+
+        // Selected receiver is the tenant user
+        $selectedReceiver = $project->client->tanent->user;
+        
+        // Verify receiver exists
+        if (!$selectedReceiver) {
+            flash()->options([
+                'timeout' => 3000,
+                'position' => 'bottom-center',
+            ])->error('Tenant user information is missing.');
+            return redirect()->back();
+        }
+
+        return view('payments.create', [
+            'projects' => $projects,
+            'users' => $users,
+            'selectedProject' => $project,
+            'selectedReceiver' => $selectedReceiver,
+            'fromDetails' => true // Flag to indicate we're coming from details route
+        ]);
+    }
+    }

@@ -157,7 +157,7 @@
                 </div>
                 
                 <!-- Notification Preferences Card -->
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Notification Preferences</h5>
                         
@@ -192,7 +192,7 @@
                         </form>
                     </div>
                 </div>
-                
+                 --}}
                 <!-- Account Management Card -->
                 <div class="card">
                     <div class="card-body">

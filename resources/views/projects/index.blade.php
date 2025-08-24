@@ -78,85 +78,89 @@
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-item">
-                        <div class="row">
-                            @if (auth()->user()->hasRole(['middleman', 'super-admin']))
-                                <div class="col-xxl-3 col-md-4">
-                                    <div class="card info-card sales-card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Total Budget</h5>
-                                            <div class="d-flex align-items-center">
-                                                <div
-                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <i class="bi bi-currency-dollar"></i>
-                                                </div>
-                                                <div class="ps-3">
-                                                    <h6>${{ number_format($statistics['total_budget']) }}</h6>
-                                                    <span class="text-success small pt-1 fw-bold">
-                                                        ${{ number_format($statistics['completed_budget']) }}
-                                                    </span>
-                                                    <span class="text-muted small pt-2 ps-1">completed</span>
+                    @if (auth()->user()->hasRole(['middleman', 'expert']))
+                        <div class="carousel-item">
+                            <div class="row">
+                                @if (auth()->user()->hasRole(['middleman']))
+                                    <div class="col-xxl-3 col-md-4">
+                                        <div class="card info-card sales-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Total Budget</h5>
+                                                <div class="d-flex align-items-center">
+                                                    <div
+                                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-currency-dollar"></i>
+                                                    </div>
+                                                    <div class="ps-3">
+                                                        <h6>${{ number_format($statistics['total_budget']) }}</h6>
+                                                        <span class="text-success small pt-1 fw-bold">
+                                                            ${{ number_format($statistics['completed_budget']) }}
+                                                        </span>
+                                                        <span class="text-muted small pt-2 ps-1">completed</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endif
+                                @endif
 
-                            @if (auth()->user()->hasRole(['middleman', 'super-admin', 'expert']))
-                                <div class="col-xxl-3 col-md-4">
-                                    <div class="card info-card revenue-card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Overdue Projects</h5>
-                                            <div class="d-flex align-items-center">
-                                                <div
-                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <i class="bi bi-exclamation-triangle"></i>
-                                                </div>
-                                                <div class="ps-3">
-                                                    <h6
-                                                        class="{{ $statistics['overdue_projects'] > 0 ? 'text-danger' : '' }}">
-                                                        {{ $statistics['overdue_projects'] }}
-                                                    </h6>
-                                                    <span class="text-muted small pt-2 ps-1">past deadline</span>
+                                @if (auth()->user()->hasRole(['middleman', 'super-admin', 'expert']))
+                                    <div class="col-xxl-3 col-md-4">
+                                        <div class="card info-card revenue-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Overdue Projects</h5>
+                                                <div class="d-flex align-items-center">
+                                                    <div
+                                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-exclamation-triangle"></i>
+                                                    </div>
+                                                    <div class="ps-3">
+                                                        <h6
+                                                            class="{{ $statistics['overdue_projects'] > 0 ? 'text-danger' : '' }}">
+                                                            {{ $statistics['overdue_projects'] }}
+                                                        </h6>
+                                                        <span class="text-muted small pt-2 ps-1">past deadline</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endif
+                                @endif
 
-                            @if (auth()->user()->hasRole(['middleman', 'super-admin']))
-                                <div class="col-xxl-3 col-md-4">
-                                    <div class="card info-card customers-card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Cancelled Projects</h5>
-                                            <div class="d-flex align-items-center">
-                                                <div
-                                                    class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <i class="bi bi-x-circle"></i>
-                                                </div>
-                                                <div class="ps-3">
-                                                    <h6
-                                                        class="{{ $statistics['cancelled_projects'] > 0 ? 'text-danger' : '' }}">
-                                                        {{ $statistics['cancelled_projects'] }}
-                                                    </h6>
-                                                    <span class="text-muted small pt-2 ps-1">cancelled</span>
+                                @if (auth()->user()->hasRole(['middleman']))
+                                    <div class="col-xxl-3 col-md-4">
+                                        <div class="card info-card customers-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Cancelled Projects</h5>
+                                                <div class="d-flex align-items-center">
+                                                    <div
+                                                        class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </div>
+                                                    <div class="ps-3">
+                                                        <h6
+                                                            class="{{ $statistics['cancelled_projects'] > 0 ? 'text-danger' : '' }}">
+                                                            {{ $statistics['cancelled_projects'] }}
+                                                        </h6>
+                                                        <span class="text-muted small pt-2 ps-1">cancelled</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
-                <button class="carousel-control-next" type="button"
-                    data-bs-target="#projects-carousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon bg-secondary rounded-circle border-0 d-none d-md-block"
-                        aria-hidden="false"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                @if (auth()->user()->hasRole(['middleman', 'expert']))
+                    <button class="carousel-control-next" type="button" data-bs-target="#projects-carousel"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-secondary rounded-circle border-0 d-none d-md-block"
+                            aria-hidden="false"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                @endif
             </div>
 
             <div class="col-lg-12">

@@ -1749,6 +1749,11 @@ h6 {
   color: var(--text-muted) !important;
 }
 
+[data-theme="dark"] .footer .copyright,
+[data-theme="dark"] .footer .credits {
+  color: var(--text-muted) !important;
+}
+
 [data-theme="dark"] .card-title {
   color: var(--text-muted) !important;
 }

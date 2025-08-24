@@ -90,7 +90,6 @@
                         </div>
                     </div>
                 @endcan
-
                 <!-- Approval Card -->
                 @role('client')
                     @if ($project->status == 'completed')
@@ -109,7 +108,7 @@
                                     </div>
                                 @else
                                     <div class="alert alert-info text-center" role="alert">
-                                        Project must be completed to approve.
+                                        Project must be Completed before Approval.
                                     </div>
                                 @endif
                             </div>
@@ -403,7 +402,7 @@
                                 approval.</p>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
-                            <a href="{{ route('payments.create', ['project_id' => $project->id]) }}" class="btn btn-primary ms-2">Proceed to Payment</a>
+                            <a href="{{ route('payments.details',$project->id) }}" class="btn btn-primary ms-2">Proceed to Payment</a>
                         </div>
                     </div>
                 </div>

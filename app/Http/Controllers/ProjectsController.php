@@ -162,7 +162,7 @@ class ProjectsController extends Controller
             $tanentId = $user->client->tanent_id;
         }
 
-        $project = Project::with(['client.user', 'files.user', 'tasks', 'projectAssigns.expert.user'])
+        $project = Project::with(['client.user', 'files.user', 'tasks', 'projectAssigns.expert.user', 'payments'])
             ->where('tanent_id', $tanentId)
             ->find($id);
         if (empty($project)) {

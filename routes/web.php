@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/payments/{id}', [PaymentsController::class, 'update'])->name('payments.update');
     Route::put('/payments/{id}/status', [PaymentsController::class, 'UpdateStatus'])->name('payments.status');
     Route::delete('/payments/{id}', [PaymentsController::class, 'destroy'])->name('payments.delete');
+    Route::get('/payments/{id}/details',[PaymentsController::class, 'details'])->name('payments.details');
 
     // Files Routes
     Route::get('/files', [FilesController::class, 'index'])->name('files.index');
