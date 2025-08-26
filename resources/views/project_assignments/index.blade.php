@@ -86,8 +86,8 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th class="text-center align-middle">Pa .ID</th>
-                                        <th class="text-center align-middle">Expert</th>
                                         <th class="text-center align-middle">Project</th>
+                                        <th class="text-center align-middle">Expert</th>
                                         <th class="text-center align-middle">Note</th>
                                         <th class="text-center align-middle">Budget</th>
                                         <th class="text-center align-middle">Action</th>
@@ -98,11 +98,15 @@
                                         @foreach ($project_assignments as $project_assignment)
                                             <tr>
                                                 <td class="text-center align-middle">{{ $project_assignment->id }}</td>
+                                                <td class="align-middle text-center">
+                                                    <a href="{{ route('projects.index') }}">
+                                                        {{ $project_assignment->project->title }}
+                                                    </a>
+                                                </td>
                                                 <td class="text-center align-middle">
                                                     {{ $project_assignment->expert->user->first_name }}
                                                     {{ $project_assignment->expert->user->last_name }}</td>
 
-                                                <td class="align-middle">{{ $project_assignment->project->title }}</td>
                                                 <td class="text-center align-middle">
                                                     {{ $project_assignment->note ?? 'N/A' }}
                                                 </td>

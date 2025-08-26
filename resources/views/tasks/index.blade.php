@@ -189,7 +189,11 @@
                                         @foreach ($tasks as $task)
                                             <tr>
                                                 <td class="text-center align-middle">{{ $task->id }}</td>
-                                                <td class="align-middle">{{ $task->project->title }}</td>
+                                                <td class="align-middle">
+                                                    <a class="fw-bold" href="{{ route('projects.index') }}">
+                                                        {{ $task->project->title }}
+                                                    </a>
+                                                </td>
                                                 <td class="text-center align-middle">
                                                     <a class="fw-bold" href="{{ route('tasks.show', $task->id) }}">
                                                         {{ $task->title }}
