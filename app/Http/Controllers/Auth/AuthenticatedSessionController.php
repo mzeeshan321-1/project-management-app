@@ -32,7 +32,8 @@ class AuthenticatedSessionController extends Controller
             // Update last login
             $user = Auth::user();
             $user->update([
-                'last_login' => now()
+                'last_login' => now(),
+                'status' => 'active',
             ]);
 
             flash()->options([
@@ -40,7 +41,7 @@ class AuthenticatedSessionController extends Controller
                 'position' => 'bottom-center',
             ])->success('Login successful! Welcome back: ' . $user->first_name . '.');
 
-            return redirect()->intended(route('dashboard', absolute: false));           
+            return redirect()->intended(route('dashboard', absolute: false));
         } catch (\Exception $e) {
             flash()->error('Login failed: ' . $e->getMessage());
             return redirect()->back();
@@ -52,6 +53,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+        $user->update([
+            'status' => 'inactive',
+        ]);
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
@@ -62,6 +68,7 @@ class AuthenticatedSessionController extends Controller
             'timeout' => 3000,
             'position' => 'bottom-center',
         ])->success('You have been logged out successfully.');
-        return redirect('/');
+
+        return redirect('login');
     }
 }

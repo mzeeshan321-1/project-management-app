@@ -78,8 +78,8 @@ class RolePermissionSeeder extends Seeder
             'manage middleman',
 
             // Reports permissions
-            'view reports',
-            'manage reports',
+            // 'view reports',
+            // 'manage reports',
 
             // Settings permissions
             'view settings',
@@ -91,9 +91,9 @@ class RolePermissionSeeder extends Seeder
             'manage profile',
 
             // Payments permissions
-            'view payments',
-            'manage payments',
-            'create payments',
+            // 'view payments',
+            // 'manage payments',
+            // 'create payments',
 
             // Expenses permissions
             'view expenses',
@@ -234,17 +234,17 @@ class RolePermissionSeeder extends Seeder
     protected function createDemoUsers()
     {
         // Create a tenant first (Middleman)
-        $tenantUser = User::factory()->create([
-            'first_name' => 'Middleman User 1',
-            'email' => 'middleman1@app.com',
-            'password' => bcrypt('password'),
-        ]);
-        $tenantUser->assignRole('middleman');
+        // $tenantUser = User::factory()->create([
+        //     'first_name' => 'Middleman User 1',
+        //     'email' => 'middleman1@app.com',
+        //     'password' => bcrypt('password'),
+        // ]);
+        // $tenantUser->assignRole('middleman');
 
         // Create the tenant record
-        $tenant = Tanent::create([
-            'user_id' => $tenantUser->id,
-        ]);
+        // $tenant = Tanent::create([
+        //     'user_id' => $tenantUser->id,
+        // ]);
 
         $users = [
             [
@@ -253,53 +253,53 @@ class RolePermissionSeeder extends Seeder
                 'password' => 'password',
                 'role' => 'super-admin'
             ],
-            [
-                'first_name' => 'Middleman User 2',
-                'email' => 'middleman2@app.com',
-                'password' => 'password',
-                'role' => 'middleman',
-                'tenant_data' => []
-            ],
-            [
-                'first_name' => 'Expert User 1',
-                'email' => 'expert1@app.com',
-                'password' => 'password',
-                'role' => 'expert',
-                'expert_data' => [
-                    'tanent_id' => $tenant->id,
-                    'specialization' => 'Web Development',
-                ]
-            ],
-            [
-                'first_name' => 'Expert User 2',
-                'email' => 'expert2@app.com',
-                'password' => 'password',
-                'role' => 'expert',
-                'expert_data' => [
-                    'tanent_id' => $tenant->id,
-                    'specialization' => 'Mobile Development',
-                ]
-            ],
-            [
-                'first_name' => 'Client User 1',
-                'email' => 'client1@app.com',
-                'password' => 'password',
-                'role' => 'client',
-                'client_data' => [
-                    'tanent_id' => $tenant->id,
-                    'industry' => 'Client Company 1',
-                ]
-            ],
-            [
-                'first_name' => 'Client User 2',
-                'email' => 'client2@app.com',
-                'password' => 'password',
-                'role' => 'client',
-                'client_data' => [
-                    'tanent_id' => $tenant->id,
-                    'industry' => 'Client Company 2',
-                ]
-            ],
+            // [
+            //     'first_name' => 'Middleman User 2',
+            //     'email' => 'middleman2@app.com',
+            //     'password' => 'password',
+            //     'role' => 'middleman',
+            //     'tenant_data' => []
+            // ],
+            // [
+            //     'first_name' => 'Expert User 1',
+            //     'email' => 'expert1@app.com',
+            //     'password' => 'password',
+            //     'role' => 'expert',
+            //     'expert_data' => [
+            //         'tanent_id' => $tenant->id,
+            //         'specialization' => 'Web Development',
+            //     ]
+            // ],
+            // [
+            //     'first_name' => 'Expert User 2',
+            //     'email' => 'expert2@app.com',
+            //     'password' => 'password',
+            //     'role' => 'expert',
+            //     'expert_data' => [
+            //         'tanent_id' => $tenant->id,
+            //         'specialization' => 'Mobile Development',
+            //     ]
+            // ],
+            // [
+            //     'first_name' => 'Client User 1',
+            //     'email' => 'client1@app.com',
+            //     'password' => 'password',
+            //     'role' => 'client',
+            //     'client_data' => [
+            //         'tanent_id' => $tenant->id,
+            //         'industry' => 'Client Company 1',
+            //     ]
+            // ],
+            // [
+            //     'first_name' => 'Client User 2',
+            //     'email' => 'client2@app.com',
+            //     'password' => 'password',
+            //     'role' => 'client',
+            //     'client_data' => [
+            //         'tanent_id' => $tenant->id,
+            //         'industry' => 'Client Company 2',
+            //     ]
+            // ],
         ];
 
         foreach ($users as $userData) {
@@ -312,26 +312,26 @@ class RolePermissionSeeder extends Seeder
             $user->assignRole($userData['role']);
 
             // Create related records based on role
-            if ($userData['role'] === 'middleman' && isset($userData['tenant_data'])) {
-                Tanent::create(array_merge(
-                    $userData['tenant_data'],
-                    ['user_id' => $user->id]
-                ));
-            }
+            // if ($userData['role'] === 'middleman' && isset($userData['tenant_data'])) {
+            //     Tanent::create(array_merge(
+            //         $userData['tenant_data'],
+            //         ['user_id' => $user->id]
+            //     ));
+            // }
 
-            if ($userData['role'] === 'expert' && isset($userData['expert_data'])) {
-                Expert::create(array_merge(
-                    $userData['expert_data'],
-                    ['user_id' => $user->id]
-                ));
-            }
+            // if ($userData['role'] === 'expert' && isset($userData['expert_data'])) {
+            //     Expert::create(array_merge(
+            //         $userData['expert_data'],
+            //         ['user_id' => $user->id]
+            //     ));
+            // }
 
-            if ($userData['role'] === 'client' && isset($userData['client_data'])) {
-                Client::create(array_merge(
-                    $userData['client_data'],
-                    ['user_id' => $user->id]
-                ));
-            }
+            // if ($userData['role'] === 'client' && isset($userData['client_data'])) {
+            //     Client::create(array_merge(
+            //         $userData['client_data'],
+            //         ['user_id' => $user->id]
+            //     ));
+            // }
         }
     }
 }

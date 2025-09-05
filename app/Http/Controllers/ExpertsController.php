@@ -90,6 +90,9 @@ class ExpertsController extends Controller
                     'image' => $imageName,
                 ]);
 
+                                $user->assignRole('expert');
+
+
                 $user->expert()->create([
                     'user_id' => $user->id,
                     'tanent_id' => auth()->user()->tanent->id,

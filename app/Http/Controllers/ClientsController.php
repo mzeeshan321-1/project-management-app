@@ -90,6 +90,8 @@ class ClientsController extends Controller
                     'image' => $imageName,
                 ]);
 
+                $user->assignRole('client');
+
                 $user->client()->create([
                     'user_id' => $user->id,
                     'tanent_id' => auth()->user()->tanent->id,

@@ -55,7 +55,7 @@ class PaymentsController extends Controller
                 ->orderBy('id', 'asc')->get();
             
             $projects = Project::where('tanent_id', $tanentId)
-                ->where('status', 'completed')
+                // ->where('status', 'completed')
                 ->whereNotExists(function ($query) {
                     $query->select('id')
                         ->from('payments')
@@ -73,7 +73,7 @@ class PaymentsController extends Controller
             $projects = Project::whereHas('client', function ($query) use ($user) {
                 $query->where('client_id', $user->client->id);
             })
-            ->where('status', 'completed')
+            // ->where('status', 'completed')
             ->whereNotExists(function ($query) {
                 $query->select('id')
                     ->from('payments')

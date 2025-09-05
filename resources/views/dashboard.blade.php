@@ -17,7 +17,7 @@
 
 @section('content')
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1 class="mb-4">Dashboard</h1>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
@@ -26,11 +26,15 @@
             <div class="col-12">
                 <div class="row gy-4">
                     <!-- User Management Section -->
-                    @canany(['manage experts', 'manage clients'])
+                    @canany(['manage experts', 'manage clients', 'manage middleman'])
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
+                                    @canany(['manage middleman', 'view middleman'])
+                                    <h5 class="card-title">Tenant Management</h5>
+                                    @elsecanany(['manage experts', 'manage clients'])
                                     <h5 class="card-title">User Management</h5>
+                                    @endcanany
                                     <div class="row gy-4">
                                         <!-- Experts Card -->
                                         @can('manage experts')
@@ -68,6 +72,27 @@
                                                                 <div class="ps-3">
                                                                     <h6>{{ $clientsCount }}</h6>
                                                                     <span class="text-muted small pt-2 ps-1">Manage Clients <i class="bi bi-arrow-right"></i></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        @endcan
+
+                                        @can('manage middleman')
+                                            <div class="col-xxl-3 col-md-4">
+                                                <a class="icon" href="{{ route('middleman.index') }}">
+                                                    <div class="card info-card revenue-card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">Tenants</h5>
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #f6f6fe;">
+                                                                    <i class="bi bi-person-lines-fill" style="color: #4154f1;"></i>
+                                                                </div>
+                                                                <div class="ps-3">
+                                                                    <h6>{{ $tanentsCount }}</h6>
+                                                                    <span class="text-muted small pt-2 ps-1">Manage Tenants <i class="bi bi-arrow-right"></i></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -315,7 +340,7 @@
                                     <div class="activity">
                                         @forelse($recentPayments as $payment)
                                             <div class="activity-item d-flex">
-                                                <div class="activite-label">{{ $payment->created_at->diffForHumans() }}</div>
+                                                <div class="activite-label">{{ $payment->created_at ? $payment->created_at->diffForHumans() : 'N/A' }}</div>
                                                 <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
                                                 <div class="activity-content">
                                                     Payment for <a href="#" class="fw-bold text-dark">{{ $payment->project->title ?? 'Project' }}</a>

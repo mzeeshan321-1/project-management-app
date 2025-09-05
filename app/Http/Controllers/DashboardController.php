@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Expert;
 use App\Models\Project;
+use App\Models\Tanent;
 use App\Models\Task;
 use App\Models\Payment;
 use App\Models\Profit;
@@ -21,6 +22,7 @@ class DashboardController extends Controller
         $tanentId = $user->tanent ? $user->tanent->id : null;
         
         // Initialize all counts to zero
+        $tanentsCount = 0;
         $expertsCount = 0;
         $clientsCount = 0;
         $projectsCount = 0;
@@ -42,6 +44,12 @@ class DashboardController extends Controller
         
         if ($user->can('manage clients') || $user->can('view clients')) {
             $clientsCount = $tanentId ? Client::where('tanent_id', $tanentId)->count() : 0;
+        }
+
+        if ($user->can('manage middleman')) {
+            if ($user->hasRole('super-admin')) {
+                $tanentsCount = Tanent::all()->count();
+            }
         }
         
         if ($user->can('manage projects') || $user->can('view projects') || $user->can('request new projects')) {
@@ -97,6 +105,7 @@ class DashboardController extends Controller
         }
         
         return view('dashboard', compact(
+            'tanentsCount',
             'expertsCount',
             'clientsCount',
             'projectsCount',

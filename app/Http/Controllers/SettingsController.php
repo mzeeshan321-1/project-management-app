@@ -62,13 +62,6 @@ class SettingsController extends Controller
             return redirect()->route('settings.index')->with('status', 'password-updated');
         }
         
-        // Handle notification preferences update
-        if ($request->has('update_notifications')) {
-            // For now, we'll just redirect back with a success message
-            // In a real application, you would save notification preferences here
-            return redirect()->route('settings.index')->with('status', 'notifications-updated');
-        }
-        
         // Default redirect
         return redirect()->route('settings.index')->with('status', 'settings-updated');
     }

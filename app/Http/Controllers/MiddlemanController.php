@@ -112,8 +112,11 @@ class MiddlemanController extends Controller
                     'image' => $imageName,
                 ]);
 
+                $user->assignRole('middleman');
+
                 $user->tanent()->create([
                     'user_id' => $user->id,
+
                 ]);
             });
             flash()->options([

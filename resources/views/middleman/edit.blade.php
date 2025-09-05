@@ -49,14 +49,15 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="password" class="form-control" name="password"
-                            id="Password" placeholder="Password" required autocomplete="off">
+                        <input type="password" class="form-control" name="password" id="Password" placeholder="Password"
+                            required autocomplete="off">
                         <label for="Password">Password</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" id="password_confirmation" required autocomplete="new-password">
+                        <input type="password" name="password_confirmation" class="form-control"
+                            placeholder="Confirm Password" id="password_confirmation" required autocomplete="new-password">
                         <label for="password_confirmation">Confirm Password</label>
                     </div>
                 </div>
@@ -76,27 +77,44 @@
                 <div class="col-md-6">
                     <div class="form-floating">
                         <select class="form-select" name="status" id="Status" aria-label="Status" placeholder="Status">
-                            <option selected value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
+                            <option selected value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active
+                            </option>
                             <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            <option value="suspended" {{ $user->status == 'suspended' ? 'selected' : '' }}>Suspended</option>
+                            <option value="suspended" {{ $user->status == 'suspended' ? 'selected' : '' }}>Suspended
+                            </option>
                         </select>
                         <label for="Status">Status</label>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <input type="file" name="image" value="{{ $user->image }}" class="form-control" id="image" title="Image"
-                        accept="image/*">
+                <div class="col-md-12 mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="input-group mt-3">
+                                <div class="form-file">
+                                    <input type="file" name="image" id="image" accept="image/*" class="form-file-input"
+                                        style="display: none;">
+                                    <label class="form-file-label border rounded" for="image">
+                                        <span class="form-file-button btn btn-light">Upload Image</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col mt-3">
+                                @if (!empty($user->image))
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset('images/' . $user->image) }}" alt="{{ $user->first_name }}"
+                                    class="img-thumbnail" id="preview">
+                                </div>
+                                    <div id="image-name" class="mt-2 text-center">{{ $user->first_name }} {{ $user->last_name }}</div>
+                                @else
+                                    <img src="" alt="Select Image" id="preview" class="img-thumbnail"
+                                        style="display: none;">
+                                    <div id="image-name" class="mt-2 text-center" style="display: none;"></div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="offset-md-4 col-md-4 mt-3">
-                    @if (!empty($user->image))
-                        <img src="{{ asset('images/' . $user->image) }}" alt="{{ $user->name }}"
-                            class="img-thumbnail" id="preview">
-                    @else
-                        <img src="" alt="Select Image" id="preview" class="img-thumbnail"
-                            style="display: none;">
-                    @endif
-                </div>
-                <div class="text-center mt-5">
+                <div class="text-center mt-3">
                     <input type="Reset" value="Reset" class="btn btn-light">
                     <input type="submit" value="Submit" class="btn btn-primary">
                 </div>
@@ -111,17 +129,20 @@
             $('#image').on('change', function(event) {
                 const imageInput = event.target;
                 const preview = $('#preview');
+                const imageName = $('#image-name');
 
                 if (imageInput.files && imageInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         preview.attr('src', e.target.result);
                         preview.show();
+                        imageName.text(imageInput.files[0].name).show();
                     };
                     reader.readAsDataURL(imageInput.files[0]);
                 } else {
                     preview.attr('src', '');
                     preview.hide();
+                    imageName.text('').hide();
                 }
             });
         });
