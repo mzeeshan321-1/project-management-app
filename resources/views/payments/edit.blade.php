@@ -22,12 +22,13 @@
         <div class="card-body">
             <h5 class="card-title">Payment Details</h5>
             <!-- Floating Labels Form -->
-            <form method="post" action="{{ route('payments.update', $payment->id) }}" class="row g-3" enctype="multipart/form-data">
+            <form method="post" action="{{ route('payments.update', $payment->id) }}" class="row g-3"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 @role('client')
-                <input type="hidden" class="form-control" value="debit" name="type">
-                <input type="hidden" class="form-control" value="pending" name="status">
+                    <input type="hidden" class="form-control" value="debit" name="type">
+                    <input type="hidden" class="form-control" value="pending" name="status">
                 @endrole
                 <div class="col-md-4">
                     <div class="form-floating">
@@ -35,7 +36,8 @@
                             <option class="text-center" value="" selected disabled>--- Select a Project ---</option>
                             @if ($projects->isNotEmpty())
                                 @foreach ($projects as $project)
-                                    <option {{ $payment->project_id == $project->id ? 'selected' : '' }} value="{{ $project->id }}">{{ $project->title }}</option>
+                                    <option {{ $payment->project_id == $project->id ? 'selected' : '' }}
+                                        value="{{ $project->id }}">{{ $project->title }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -48,7 +50,8 @@
                             <option class="text-center" value="" selected disabled>--- Select a Reciever ---</option>
                             @if ($users->isNotEmpty())
                                 @foreach ($users as $user)
-                                    <option {{ $payment->reciever_id == $user->id ? 'selected' : '' }} value="{{ $user->id }}">
+                                    <option {{ $payment->reciever_id == $user->id ? 'selected' : '' }}
+                                        value="{{ $user->id }}">
                                         {{ $user->first_name }} {{ $user->last_name }}</option>
                                 @endforeach
                             @endif
@@ -58,8 +61,8 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating">
-                        <input type="text" class="form-control" value="{{ $payment->amount }}" name="amount" id="Amount"
-                            placeholder="Amount" required>
+                        <input type="text" class="form-control" value="{{ $payment->amount }}" name="amount"
+                            id="Amount" placeholder="Amount" required>
                         <label for="Amount">Amount</label>
                     </div>
                 </div>
@@ -98,20 +101,35 @@
                         </div>
                     </div>
                 @endrole
-                <div class="col-md-12">
-                    <input type="file" name="upload_invoice" value="{{ $payment->upload_invoice }}" class="form-control" id="image" title="Upload Invoice"
-                        accept="image/*" area-label="Upload Invoice">
+                <div class="col-md-12 mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="input-group mt-3">
+                                <div class="form-file">
+                                    <input type="file" name="upload_invoice" id="image" accept="image/*"
+                                        class="form-file-input" style="display: none;">
+                                    <label class="form-file-label border rounded" for="image">
+                                        <span class="form-file-button btn btn-light">Upload Invoice</span>
+                                    </label>
+                                </div>
+                            </div>
+                            @if (!empty($payment->upload_invoice))
+                                <div class="d-flex justify-content-center mt-3">
+                                    <img src="{{ asset('images/' . $payment->upload_invoice) }}"
+                                        alt="{{ $payment->project->title }}" class="img-thumbnail" id="preview">
+                                </div>
+                                <div id="image-name" class="text-center mt-2"></div>
+                            @else
+                                <div class="d-flex justify-content-center mt-3">
+                                    <img src="" alt="Select Image" id="preview" class="img-thumbnail"
+                                        style="display: none;">
+                                </div>
+                                <div id="image-name" class="text-center mt-2" style="display: none;"></div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-               <div class="offset-md-4 col-md-4 mt-3">
-                    @if (!empty($payment->upload_invoice))
-                        <img src="{{ asset('images/' . $payment->upload_invoice) }}" alt="{{ $payment->project->title }}"
-                            class="img-thumbnail" id="preview">
-                    @else
-                        <img src="" alt="Select Image" id="preview" class="img-thumbnail"
-                            style="display: none;">
-                    @endif
-                </div>
-                <div class="text-center mt-5">
+                <div class="text-center mt-3">
                     <input type="Reset" value="Reset" class="btn btn-light">
                     <input type="submit" value="Submit" class="btn btn-primary">
                 </div>
@@ -126,17 +144,20 @@
             $('#image').on('change', function(event) {
                 const imageInput = event.target;
                 const preview = $('#preview');
+                const imageName = $('#image-name');
 
                 if (imageInput.files && imageInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         preview.attr('src', e.target.result);
                         preview.show();
+                        imageName.text(imageInput.files[0].name).show();
                     };
                     reader.readAsDataURL(imageInput.files[0]);
                 } else {
                     preview.attr('src', '');
                     preview.hide();
+                    imageName.text('').hide();
                 }
             });
         });

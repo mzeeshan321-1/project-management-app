@@ -97,7 +97,8 @@
                             <div class="card-body">
                                 <h5 class="card-title">Project Approval</h5>
                                 @if ($project->status == 'completed' && !$project->approval_status)
-                                <p>Thank you for taking the time to review our work. Your approval is required to finalize the project and we appreciate your support.</p>
+                                    <p>Thank you for taking the time to review our work. Your approval is required to finalize
+                                        the project and we appreciate your support.</p>
                                     <button type="button" class="btn btn-success w-100" data-bs-toggle="modal"
                                         data-bs-target="#approvalModal">
                                         <i class="bi bi-check-circle"></i> Approve Project
@@ -170,19 +171,49 @@
                                                 <tr>
                                                     <th class="bg-light">Task Overview</th>
                                                     <td>
-                                                        <div class="d-flex gap-2 flex-wrap">
-                                                            <span class="badge bg-primary">Total:
-                                                                {{ $project->tasks->count() }}</span>
-                                                            <span class="badge bg-success">Completed:
-                                                                {{ $project->tasks->where('status', 'completed')->count() }}</span>
-                                                            <span class="badge bg-warning">Pending:
-                                                                {{ $project->tasks->where('status', 'pending')->count() }}</span>
-                                                            <span class="badge bg-info">In Progress:
-                                                                {{ $project->tasks->where('status', 'in_progress')->count() }}</span>
-                                                            <span class="badge bg-secondary">On Hold:
-                                                                {{ $project->tasks->where('status', 'on_hold')->count() }}</span>
-                                                            <span class="badge bg-danger">Cancelled:
-                                                                {{ $project->tasks->where('status', 'cancelled')->count() }}</span>
+                                                        <div class="row">
+                                                            <div class="col-md-5">
+                                                                <div class="d-flex flex-wrap p-2 rounded">
+                                                                    <span class="text-primary fw-bold">Total: <span
+                                                                            class="badge rounded-circle bg-primary px-2 py-1">
+                                                                            {{ $project->tasks->count() }}</span></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="d-flex flex-wrap p-2 rounded">
+                                                                    <span class="text-success fw-bold">Completed: <span
+                                                                            class="badge rounded-circle bg-success px-2 py-1">
+                                                                            {{ $project->tasks->where('status', 'completed')->count() }}</span></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="d-flex flex-wrap p-2 rounded">
+                                                                    <span class="text-warning fw-bold">Pending: <span
+                                                                            class="badge rounded-circle bg-warning px-2 py-1">
+                                                                            {{ $project->tasks->where('status', 'pending')->count() }}</span></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="d-flex flex-wrap p-2 rounded">
+                                                                    <span class="text-info fw-bold">In Progress: <span
+                                                                            class="badge rounded-circle bg-info px-2 py-1">
+                                                                            {{ $project->tasks->where('status', 'in_progress')->count() }}</span></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="d-flex flex-wrap p-2 rounded">
+                                                                    <span class="text-secondary fw-bold">On Hold: <span
+                                                                            class="badge rounded-circle bg-secondary px-2 py-1">
+                                                                            {{ $project->tasks->where('status', 'on_hold')->count() }}</span></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="d-flex flex-wrap p-2 rounded">
+                                                                    <span class="text-danger fw-bold">Cancelled: <span
+                                                                            class="badge rounded-circle bg-danger px-2 py-1">
+                                                                            {{ $project->tasks->where('status', 'cancelled')->count() }}</span></span>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -190,8 +221,10 @@
                                             <tr>
                                                 <th class="bg-light">Documents</th>
                                                 <td>
-                                                    <span class="badge bg-primary">{{ $project->files->count() }}
-                                                        file(s)</span>
+                                                    <span class="text-primary fw-bold">file(s)
+                                                        <span class="badge rounded-circle bg-primary px-2 py-1">
+                                                            {{ $project->files->count() }}</span>
+                                                    </span>
                                                     @if ($project->files->count() > 0)
                                                         <small class="text-muted ms-2">Last uploaded:
                                                             {{ $project->files->sortByDesc('created_at')->first()->created_at->format('M d, Y') }}</small>
@@ -209,7 +242,7 @@
                                                         @endphp
                                                         {{ $duration }} days
                                                         <small class="text-muted">
-                                                            ({{ $start->isPast() ? $start->diffForHumans() : 'Starts ' . $start->diffForHumans() }})
+                                                            ({{ $start->format('d M') }} - {{ $end->format('d M') }})
                                                         </small>
                                                     @else
                                                         <span class="text-muted">Timeline not set</span>
@@ -219,7 +252,7 @@
                                             <tr>
                                                 <th class="bg-light">Created</th>
                                                 <td>
-                                                    {{ $project->created_at->format('M d, Y') }}
+                                                    {{ $project->created_at->format('d M, Y') }}
                                                     <small
                                                         class="text-muted">({{ $project->created_at->diffForHumans() }})</small>
                                                 </td>
@@ -286,27 +319,29 @@
                                                                             <i class="bi bi-download me-2"></i> Download
                                                                         </a>
                                                                     </li>
-                                                                    <li>
-                                                                        <a class="dropdown-item"
-                                                                            href="{{ route('files.edit', $file->id) }}">
-                                                                            <i class="bi bi-pencil me-2"></i> Edit
-                                                                        </a>
-                                                                    </li>
-                                                                    @can('manage project deliverables')
+                                                                    @if (auth()->user()->id == $file->uploaded_by || auth()->user()->hasRole('middleman'))
                                                                         <li>
-                                                                            <form
-                                                                                action="{{ route('files.delete', $file->id) }}"
-                                                                                method="POST">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <button type="submit"
-                                                                                    class="dropdown-item text-danger"
-                                                                                    onclick="return confirm('Are you sure you want to delete this file?')">
-                                                                                    <i class="bi bi-trash me-2"></i> Delete
-                                                                                </button>
-                                                                            </form>
+                                                                            <a class="dropdown-item"
+                                                                                href="{{ route('files.edit', $file->id) }}">
+                                                                                <i class="bi bi-pencil me-2"></i> Edit
+                                                                            </a>
                                                                         </li>
-                                                                    @endcan
+                                                                        @can('manage project deliverables')
+                                                                            <li>
+                                                                                <form
+                                                                                    action="{{ route('files.delete', $file->id) }}"
+                                                                                    method="POST">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+                                                                                    <button type="submit"
+                                                                                        class="dropdown-item text-danger"
+                                                                                        onclick="return confirm('Are you sure you want to delete this file?')">
+                                                                                        <i class="bi bi-trash me-2"></i> Delete
+                                                                                    </button>
+                                                                                </form>
+                                                                            </li>
+                                                                        @endcan
+                                                                    @endif
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -341,7 +376,11 @@
                                             <div class="card mb-3">
                                                 <div class="card-body">
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <h5 class="card-title mb-0">{{ $task->title }}</h5>
+                                                        <h5 class="card-title mb-0">
+                                                            <a href="{{ route('tasks.show', $task) }}">f
+                                                                {{ $task->title }}
+                                                            </a>
+                                                        </h5>
                                                         <div class="task-status">
                                                             @if ($task->status == 'pending')
                                                                 <span class="badge bg-warning">Pending</span>
@@ -364,7 +403,7 @@
                                                                 {{ $task->due_date ? date('M d, Y', strtotime($task->due_date)) : 'Not Set' }}
                                                             </small>
                                                         </div>
-                                                        @can('manage tasks')
+                                                        @canany('manage tasks')
                                                             <div class="task-actions">
                                                                 <a href="{{ route('tasks.edit', $task->id) }}"
                                                                     class="btn btn-sm btn-outline-primary">
@@ -402,7 +441,8 @@
                                 approval.</p>
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
-                            <a href="{{ route('payments.details',$project->id) }}" class="btn btn-primary ms-2">Proceed to Payment</a>
+                            <a href="{{ route('payments.details', $project->id) }}" class="btn btn-primary ms-2">Proceed
+                                to Payment</a>
                         </div>
                     </div>
                 </div>

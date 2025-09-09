@@ -53,13 +53,14 @@ class PaymentsController extends Controller
                 //     $query->where('tanent_id', $tanentId);
                 // })
                 ->orderBy('id', 'asc')->get();
-            
+
             $projects = Project::where('tanent_id', $tanentId)
-                // ->where('status', 'completed')
-                ->whereNotExists(function ($query) {
+                ->where('status', 'completed')
+                ->whereNotExists(function ($query) use ($user) {
                     $query->select('id')
                         ->from('payments')
-                        ->whereColumn('project_id', 'projects.id');
+                        ->whereColumn('project_id', 'projects.id')
+                        ->where('sender_id', $user->id);
                 })
                 ->orderBy('id', 'asc')
                 ->get();
@@ -69,26 +70,19 @@ class PaymentsController extends Controller
             $users = User::whereHas('tanent', function ($query) use ($tanentId) {
                 $query->where('id', $tanentId);
             })->orderBy('id', 'asc')->get();
-            
+
             $projects = Project::whereHas('client', function ($query) use ($user) {
                 $query->where('client_id', $user->client->id);
             })
-            // ->where('status', 'completed')
-            ->whereNotExists(function ($query) {
-                $query->select('id')
-                    ->from('payments')
-                    ->whereColumn('project_id', 'projects.id');
-            })
-            ->orderBy('id', 'asc')
-            ->get();
-        }
-
-        if (!$tanentId) {
-            flash()->options([
-                'timeout' => 3000,
-                'position' => 'bottom-center',
-            ])->error('Tenant not found for the current user.');
-            return redirect()->back();
+                ->where('status', 'completed')
+                ->whereNotExists(function ($query) use ($user) {
+                    $query->select('id')
+                        ->from('payments')
+                        ->whereColumn('project_id', 'projects.id')
+                        ->where('sender_id', $user->id);
+                })
+                ->orderBy('id', 'asc')
+                ->get();
         }
 
         return view('payments.create', compact('projects', 'users'));
@@ -236,14 +230,6 @@ class PaymentsController extends Controller
             })
                 ->where('status', 'completed')
                 ->orderBy('id', 'asc')->get();
-        }
-
-        if (!$tanentId) {
-            flash()->options([
-                'timeout' => 3000,
-                'position' => 'bottom-center',
-            ])->error('Tenant not found for the current user.');
-            return redirect()->back();
         }
 
         return view('payments.edit', compact('projects', 'users', 'payment'));
@@ -447,7 +433,7 @@ class PaymentsController extends Controller
     {
         // Find project with all necessary relationships
         $project = Project::with(['client.user', 'client.tanent.user'])->find($id);
-        
+
         if (empty($project)) {
             flash()->options([
                 'timeout' => 3000,
@@ -476,7 +462,7 @@ class PaymentsController extends Controller
         }
 
         $user = auth()->user();
-        
+
         // Only allow access to client role
         if (!$user->hasRole('client')) {
             flash()->options([
@@ -498,13 +484,13 @@ class PaymentsController extends Controller
         $projects = Project::whereHas('client', function ($query) use ($user) {
             $query->where('client_id', $user->client->id);
         })
-        ->where('status', 'completed')
-        ->orderBy('id', 'asc')
-        ->get();
+            ->where('status', 'completed')
+            ->orderBy('id', 'asc')
+            ->get();
 
         // Selected receiver is the tenant user
         $selectedReceiver = $project->client->tanent->user;
-        
+
         // Verify receiver exists
         if (!$selectedReceiver) {
             flash()->options([
@@ -522,4 +508,4 @@ class PaymentsController extends Controller
             'fromDetails' => true // Flag to indicate we're coming from details route
         ]);
     }
-    }
+}

@@ -92,9 +92,9 @@
                                                         <i class="bi bi-currency-dollar"></i>
                                                     </div>
                                                     <div class="ps-3">
-                                                        <h6>${{ number_format($statistics['total_budget']) }}</h6>
+                                                        <h6>${{ number_format($statistics['total_budget'], 2) }}</h6>
                                                         <span class="text-success small pt-1 fw-bold">
-                                                            ${{ number_format($statistics['completed_budget']) }}
+                                                            ${{ number_format($statistics['completed_budget'], 2) }}
                                                         </span>
                                                         <span class="text-muted small pt-2 ps-1">completed</span>
                                                     </div>
@@ -214,7 +214,7 @@
                                                         {{ $project->tanent->user->first_name }}
                                                         {{ $project->tanent->user->last_name }}</td>
                                                 @endrole
-                                                <td class="text-center align-middle">{{ $project->description ?? 'N/A' }}
+                                                <td class="text-center align-middle text-wrap">{{ $project->description ?? 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">
                                                     {{ $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('d-M-Y') : 'N/A' }}

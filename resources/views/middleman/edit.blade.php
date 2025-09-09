@@ -1,26 +1,26 @@
 @extends('layouts.app')
 
 @section('title')
-    <title>Edit Tanent Account</title>
+    <title>Edit Tenant Account</title>
 @endsection
 
 @section('content')
     <div class="pagetitle">
-        <h1>Edit Tanent Account</h1>
+        <h1>Edit Tenant Account</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('middleman.index') }}">Tanents</a></li>
-                <li class="breadcrumb-item active">Edit Tanent Account</li>
+                <li class="breadcrumb-item"><a href="{{ route('middleman.index') }}">Tenants</a></li>
+                <li class="breadcrumb-item active">Edit Tenant Account</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    <div class="text-end mb-2" title="Back to Tanents">
+    <div class="text-end mb-2" title="Back to Tenants">
         <a href="{{ route('middleman.index') }}" class="btn btn-primary"><i class="ri-arrow-left-s-line"></i></a>
     </div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Edit Tanent Details</h5>
+            <h5 class="card-title">Edit Tenant Details</h5>
             <!-- Floating Labels Form -->
             <form method="post" action="{{ route('middleman.update', $user->id) }}" class="row g-3"
                 enctype="multipart/form-data">
@@ -86,31 +86,31 @@
                         <label for="Status">Status</label>
                     </div>
                 </div>
-                <div class="col-md-12 mt-5">
+                <div class="col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="input-group mt-3">
                                 <div class="form-file">
-                                    <input type="file" name="image" id="image" accept="image/*" class="form-file-input"
-                                        style="display: none;">
+                                    <input type="file" name="image" id="image" accept="image/*"
+                                        class="form-file-input" style="display: none;">
                                     <label class="form-file-label border rounded" for="image">
                                         <span class="form-file-button btn btn-light">Upload Image</span>
                                     </label>
                                 </div>
                             </div>
-                            <div class="col mt-3">
-                                @if (!empty($user->image))
-                                <div class="d-flex justify-content-center">
+                            @if (!empty($user->image))
+                                <div class="d-flex justify-content-center mt-3">
                                     <img src="{{ asset('images/' . $user->image) }}" alt="{{ $user->first_name }}"
-                                    class="img-thumbnail" id="preview">
+                                        class="img-thumbnail" id="preview">
                                 </div>
-                                    <div id="image-name" class="mt-2 text-center">{{ $user->first_name }} {{ $user->last_name }}</div>
-                                @else
+                                <div id="image-name" class="text-center mt-2"></div>
+                            @else
+                                <div class="d-flex justify-content-center mt-3">
                                     <img src="" alt="Select Image" id="preview" class="img-thumbnail"
                                         style="display: none;">
-                                    <div id="image-name" class="mt-2 text-center" style="display: none;"></div>
-                                @endif
-                            </div>
+                                </div>
+                                <div id="image-name" class="text-center mt-2" style="display: none;"></div>
+                            @endif
                         </div>
                     </div>
                 </div>

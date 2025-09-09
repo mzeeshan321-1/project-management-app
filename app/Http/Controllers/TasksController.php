@@ -62,7 +62,7 @@ class TasksController extends Controller
             'in_progress_tasks' => $tasks->where('status', 'in_progress')->count(),
             'cancelled_tasks' => $tasks->where('status', 'cancelled')->count(),
             'overdue_tasks' => $tasks->filter(function ($task) {
-                return $task->due_date && Carbon::parse($task->due_date)->isPast() && $task->status !== 'completed';
+                return $task->due_date && Carbon::parse($task->due_date)->gt(Carbon::today()) && $task->status !== 'completed';
             })->count(),
         ];
 
@@ -159,6 +159,8 @@ class TasksController extends Controller
             ])->error('Task ID no: ' . $id . ' Not found!');
             return redirect()->back();
         }
+        $task->due_date = Carbon::createFromFormat('Y-m-d', $task->due_date)->format('d-M-Y');
+
         return view('tasks.edit', compact('projects', 'task'));
     }
 

@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('title')
-    <title>Tanents</title>
+    <title>Tenants</title>
 @endsection
 
 @section('content')
     <div class="pagetitle">
-        <h1>Tanents</h1>
+        <h1>Tenants</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item active">Tanents</li>
+                <li class="breadcrumb-item active">Tenants</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -21,11 +21,11 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title">Tanents Detailed List</h5>
+                            <h5 class="card-title">Tenants Detailed List</h5>
                             @can('manage middleman')
-                                <div class="col text-end pb-2" title="Create Tanent">
+                                <div class="col text-end pb-2" title="Create Tenants">
                                     <a href="{{ route('middleman.create') }}" class="btn btn-primary">
-                                        <i class="ri-add-fill"></i> Create Tanent
+                                        <i class="ri-add-fill"></i> Create Tenants
                                     </a>
                                 </div>
                             @endcan
@@ -89,7 +89,7 @@
                                                             class="badge bg-success">{{ strtoupper($tanent->user->status) }}</span>
                                                     @elseif ($tanent->user->status == 'inactive')
                                                         <span
-                                                            class="badge bg-danger">{{ strtoupper($tanent->user->status) }}</span>
+                                                            class="badge bg-secondary">{{ strtoupper($tanent->user->status) }}</span>
                                                     @elseif ($tanent->user->status == 'suspended')
                                                         <span
                                                             class="badge bg-danger">{{ strtoupper($tanent->user->status) }}</span>

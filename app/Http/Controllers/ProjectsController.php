@@ -68,7 +68,7 @@ class ProjectsController extends Controller
             'total_budget' => $projects->sum('budget'),
             'completed_budget' => $projects->where('status', 'completed')->sum('budget'),
             'overdue_projects' => $projects->filter(function ($project) {
-                return $project->deadline && \Carbon\Carbon::parse($project->deadline)->isPast() && $project->status !== 'completed';
+                return $project->deadline && Carbon::parse($project->deadline)->isPast() && $project->status !== 'completed';
             })->count(),
         ];
 
@@ -153,18 +153,22 @@ class ProjectsController extends Controller
     {
         $user = auth()->user();
         $tanentId = null;
+        $expertId = null;
 
         if ($user->tanent) {
             $tanentId = $user->tanent->id;
-        } elseif ($user->expert) {
+        }
+        elseif ($user->expert) {
             $tanentId = $user->expert->tanent_id;
+            $expertId = $user->expert->id;
         } elseif ($user->client) {
             $tanentId = $user->client->tanent_id;
         }
 
-        $project = Project::with(['client.user', 'files.user', 'tasks', 'projectAssigns.expert.user', 'payments'])
+        $project = Project::with(['client.user', 'tasks', 'projectAssigns.expert.user', 'payments', 'files.user.roles'])
             ->where('tanent_id', $tanentId)
             ->find($id);
+
         if (empty($project)) {
             flash()->options([
                 'timeout' => 3000,
@@ -172,6 +176,22 @@ class ProjectsController extends Controller
             ])->error('Project ID no: ' . $id . ' Not found!');
             return redirect()->back();
         }
+
+        if ($project) {
+            // Filter files based on user role
+            if ($user->hasRole('expert')) {
+                // Experts can only see files uploaded by middleman and their own files
+                $project->files = $project->files->filter(function ($file) use ($user) {
+                    return $file->user->hasRole('middleman') || $file->user->id === $user->id;
+                });
+            } elseif ($user->hasRole('client') || $user->hasRole('middleman')) {
+                // Clients and middleman can see files uploaded by experts
+                $project->files = $project->files->filter(function ($file) {
+                    return $file->user->hasRole('expert');
+                });
+            }
+        }
+
         return view('projects.show', compact('project'));
     }
 

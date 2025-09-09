@@ -31,6 +31,17 @@ class AuthenticatedSessionController extends Controller
 
             // Update last login
             $user = Auth::user();
+            if ($user->status === 'suspended') {
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error('Your account is suspended. Please contact administrator for further details.');
+                return redirect()->route('login');
+            }
+
             $user->update([
                 'last_login' => now(),
                 'status' => 'active',

@@ -14,11 +14,11 @@
                         <div class="d-flex justify-content-center py-4">
                             <a href="index.html" class="logo d-flex align-items-center w-auto">
                                 <img src="assets/img/logo.png" alt="">
-                                <span class="d-none d-lg-block">NiceAdmin</span>
+                                <span class="d-none d-lg-block">Genixstack</span>
                             </a>
                         </div><!-- End Logo -->
 
-                        <div class="card mb-3">
+                        <div class="card mb-1">
 
                             <div class="card-body">
 
@@ -46,8 +46,8 @@
                                     <div class="col-12">
                                         <label for="Password" class="form-label">Password</label>
                                         <input type="password" name="password" class="form-control" id="Password" required autocomplete="current-password">
-                                        <small class="text-muted">Minimum 8 characters</small>
                                         <small class="invalid-feedback" role="alert">Please enter your Password</small>
+                                        <small class="text-muted">Minimum 8 characters</small>
                                     </div>
 
                                     <div class="col-12">
@@ -58,30 +58,22 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        @if (Route::has('password.request'))
+                                        {{-- @if (Route::has('password.request'))
                                         <small class="text-dark text-sm">
                                             <a class="text-decoration-underline"
                                                 href="{{ route('password.request') }}">
                                                 Forgot your password?
                                             </a>
                                             </small>
-                                        @endif
-                                        <input class="btn btn-primary mt-3 w-100" type="submit" value="Login">
-                                    </div>
-                                    <div class="col-12">
-                                        <p class="small mb-0">Don't have account? <a href="{{ route('register') }}">Create
-                                                an
-                                                account</a></p>
+                                        @endif --}}
+                                        <input class="btn btn-primary mt-1 w-100" type="submit" value="Login">
                                     </div>
                                 </form>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </section>
-
     </div>
 @endsection

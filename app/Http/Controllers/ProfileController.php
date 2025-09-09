@@ -21,7 +21,7 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $user = $request->user()->load(['tanent.user', 'expert', 'client']);
-        
+
         return view('profile.edit', [
             'user' => $user,
         ]);
@@ -33,7 +33,7 @@ class ProfileController extends Controller
     public function index(Request $request): View
     {
         $authUser = $request->user();
-        
+
         return view('profile.index', compact('authUser'));
     }
 
@@ -54,23 +54,40 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Update the user's profile image.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function updateImage(Request $request, $id): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $user = $request->user();
+        $user = User::find($id);
 
-        Auth::logout();
+        if (!file_exists(public_path('images'))) {
+            mkdir(public_path('images'), 0755, true); // Create the directory if it doesn't exist
+        }
+        if ($request->hasFile('image')) {
+            $userImage = $user->image;
+            $imageName = null;
+            if (!empty($userImage)) {
+                $existingImage = public_path('images/' . $userImage);
+                if (file_exists($existingImage)) {
+                    unlink($existingImage);
+                }
+            }
+            $image = $request->file('image');
+            $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            $sanitizedOriginalName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $originalName);
+            $imageName = $sanitizedOriginalName . '_' . time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('images');
+            $image->move($destinationPath, $imageName);
+        } else {
+            $imageName = $user->image;
+        }
 
-        $user->delete();
+        $user->update(['image' => $imageName]);
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return redirect()->route('profile.index');
     }
 }

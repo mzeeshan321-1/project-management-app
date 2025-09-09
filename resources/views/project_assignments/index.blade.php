@@ -76,7 +76,7 @@
                             <h5 class="card-title">Project Assignment Details</h5>
                             <div class="col text-end" title="Create Project Assignments">
                                 <a href="{{ route('project_assignments.create') }}" class="btn btn-primary">
-                                    <i class="ri-add-fill"></i> Create Project Assignments
+                                    <i class="ri-add-fill"></i> Assign Project
                                 </a>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                             <tr>
                                                 <td class="text-center align-middle">{{ $project_assignment->id }}</td>
                                                 <td class="align-middle text-center">
-                                                    <a href="{{ route('projects.index') }}">
+                                                    <a class="fw-bold" href="{{ route('projects.index') }}">
                                                         {{ $project_assignment->project->title }}
                                                     </a>
                                                 </td>
@@ -107,7 +107,7 @@
                                                     {{ $project_assignment->expert->user->first_name }}
                                                     {{ $project_assignment->expert->user->last_name }}</td>
 
-                                                <td class="text-center align-middle">
+                                                <td class="text-center align-middle text-wrap">
                                                     {{ $project_assignment->note ?? 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">{{ $project_assignment->budget }}</td>

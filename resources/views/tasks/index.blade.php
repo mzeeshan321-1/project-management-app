@@ -203,7 +203,7 @@
                                                 <td class="text-center align-middle">{{ $task->description ?? 'N/A' }}
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->diffForHumans() : 'N/A' }}
+                                                    {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('d M Y') : 'N/A' }}
                                                 </td>
                                                 @if ($task->status == 'completed')
                                                     <td class="text-center align-middle">
@@ -224,18 +224,18 @@
                                                 </td>
                                                 <td class="text-center align-middle">
                                                     @if ($task->status == 'pending')
-                                                        <span class="badge bg-info">{{ strtoupper($task->status) }}</span>
+                                                        <span class="badge bg-warning">{{ strtoupper($task->status) }}</span>
                                                     @elseif ($task->status == 'completed')
                                                         <span
                                                             class="badge bg-success">{{ strtoupper($task->status) }}</span>
                                                     @elseif ($task->status == 'in_progress')
                                                         <span
-                                                            class="badge bg-secondary">{{ strtoupper($task->status) }}</span>
+                                                            class="badge bg-info">{{ strtoupper($task->status) }}</span>
                                                     @elseif ($task->status == 'cancelled')
                                                         <span
                                                             class="badge bg-danger">{{ strtoupper($task->status) }}</span>
                                                     @elseif ($task->status == 'on_hold')
-                                                        <span class="badge bg-dark">{{ strtoupper($task->status) }}</span>
+                                                        <span class="badge bg-secondary">{{ strtoupper($task->status) }}</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-middle">

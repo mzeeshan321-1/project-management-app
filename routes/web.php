@@ -67,8 +67,9 @@ Route::middleware('auth')->group(function () {
     
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/{id}/show', [ProfileController::class, 'show'])->name('profile.show');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/profile/{id}/update_image', [ProfileController::class, 'updateImage'])->name('profile.updateImage');
 
     // Super Admin Role Routes
     Route::middleware(['role:super-admin'])->group(function () {

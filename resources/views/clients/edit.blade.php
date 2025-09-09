@@ -96,20 +96,35 @@
                         <label for="Status">Status</label>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <input type="file" name="image" value="{{ $client->user->image }}" class="form-control" id="image" title="Image"
-                        accept="image/*">
-                </div>
-                <div class="offset-md-4 col-md-4 mt-3">
+                <div class="col-md-12 mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="input-group mt-3">
+                                <div class="form-file">
+                                    <input type="file" name="image" id="image" accept="image/*"
+                                        class="form-file-input" style="display: none;">
+                                    <label class="form-file-label border rounded" for="image">
+                                        <span class="form-file-button btn btn-light">Upload Image</span>
+                                    </label>
+                                </div>
+                            </div>
                     @if (!empty($client->user->image))
+                                <div class="d-flex justify-content-center mt-3">
                         <img src="{{ asset('images/' . $client->user->image) }}" alt="{{ $client->user->name }}"
-                            class="img-thumbnail" id="preview">
-                    @else
-                        <img src="" alt="Select Image" id="preview" class="img-thumbnail"
-                            style="display: none;">
-                    @endif
+                                        class="img-thumbnail" id="preview">
+                                </div>
+                                <div id="image-name" class="text-center mt-2"></div>
+                            @else
+                                <div class="d-flex justify-content-center mt-3">
+                                    <img src="" alt="Select Image" id="preview" class="img-thumbnail"
+                                        style="display: none;">
+                                </div>
+                                <div id="image-name" class="text-center mt-2" style="display: none;"></div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                <div class="text-center mt-5">
+                <div class="text-center mt-3">
                     <input type="Reset" value="Reset" class="btn btn-light">
                     <input type="submit" value="Submit" class="btn btn-primary">
                 </div>
@@ -124,17 +139,20 @@
             $('#image').on('change', function(event) {
                 const imageInput = event.target;
                 const preview = $('#preview');
+                const imageName = $('#image-name');
 
                 if (imageInput.files && imageInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         preview.attr('src', e.target.result);
                         preview.show();
+                        imageName.text(imageInput.files[0].name).show();
                     };
                     reader.readAsDataURL(imageInput.files[0]);
                 } else {
                     preview.attr('src', '');
                     preview.hide();
+                    imageName.text('').hide();
                 }
             });
         });

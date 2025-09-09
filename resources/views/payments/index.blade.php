@@ -17,7 +17,7 @@
     {{-- {{ dd($payments) }} --}}
     <section class="section">
         <div class="row">
-            
+
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
@@ -37,12 +37,12 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th class="text-center align-middle">P.ID</th>
+                                        <th class="text-center align-middle">Invoice</th>
                                         <th class="text-center align-middle">Project</th>
                                         <th class="align-middle">Sender Name</th>
                                         <th class="align-middle">Receiver Name</th>
                                         <th class="text-center align-middle">Amount</th>
                                         <th class="text-center align-middle">Note</th>
-                                        {{-- <th class="text-center align-middle">Invoice</th> --}}
                                         <th class="text-center align-middle">Type</th>
                                         <th class="text-center align-middle">Status</th>
                                         @can('manage payments')
@@ -55,7 +55,23 @@
                                         @foreach ($payments as $payment)
                                             <tr>
                                                 <td class="text-center align-middle">{{ $payment->id }}</td>
-                                                <td class="text-center align-middle">{{ $payment->project->title }}({{ $payment->project->id }})</td>
+                                                <td class="text-center align-middle">
+                                                    @if (!empty($payment->upload_invoice))
+                                                        <a href="{{ asset('images/' . $payment->upload_invoice) }}"
+                                                            target="_blank">
+                                                            <img src="{{ asset('images/' . $payment->upload_invoice) }}"
+                                                                class="rounded-circle" width="50" height="50"
+                                                                alt="{{ $payment->upload_invoice }}">
+                                                        </a>
+                                                    @else
+                                                        <span class="badge bg-secondary">No Invoice</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <a class="fw-bold" href="{{ route('projects.index', $payment->project->id) }}">
+                                                        {{ $payment->project->title }}
+                                                    </a>
+                                                </td>
                                                 <td class="text-center align-middle">
                                                     {{ $payment->sender ? $payment->sender->first_name . ' ' . $payment->sender->last_name : 'N/A' }}
                                                 </td>
@@ -64,7 +80,6 @@
                                                 </td>
                                                 <td class="text-center align-middle">{{ $payment->amount ?? 'N/A' }}
                                                 </td>
-                                                {{-- <td class="text-center align-middle">{{ $payment->upload_invoice ?? 'N/A' }}</td> --}}
                                                 <td class="text-center align-middle">{{ $payment->note ?? 'N/A' }}</td>
                                                 <td class="text-center align-middle">
                                                     @if ($payment->type == 'debit')
@@ -80,7 +95,8 @@
                                                 <td class="text-center align-middle">
                                                     @role('middleman')
                                                         <div class="dropdown position-static">
-                                                            <button class="btn btn-{{ $payment->status == 'pending' ? 'secondary' : ($payment->status == 'received' ? 'success' : 'danger') }} btn-sm rounded-pill px-2 py-1"
+                                                            <button
+                                                                class="btn btn-{{ $payment->status == 'pending' ? 'secondary' : ($payment->status == 'received' ? 'success' : 'danger') }} btn-sm rounded-pill px-2 py-1"
                                                                 type="button" data-bs-toggle="dropdown" aria-expanded="false"
                                                                 style="font-size: 0.8rem">
                                                                 <span class="d-flex align-items-center">
@@ -107,7 +123,8 @@
                                                             </form>
                                                         </div>
                                                     @else
-                                                        <span class="badge bg-{{ $payment->status == 'pending' ? 'secondary' : ($payment->status == 'received' ? 'success' : 'danger') }}">{{ strtoupper($payment->status) }}</span>
+                                                        <span
+                                                            class="badge bg-{{ $payment->status == 'pending' ? 'secondary' : ($payment->status == 'received' ? 'success' : 'danger') }}">{{ strtoupper($payment->status) }}</span>
                                                     @endrole
                                                 </td>
                                                 @can('manage payments')

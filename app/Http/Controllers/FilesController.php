@@ -36,7 +36,7 @@ class FilesController extends Controller
                 ->orderBy('id', 'asc')
                 ->get();
         }
-        
+
         return view('files.index', compact('files'));
     }
 
@@ -53,11 +53,20 @@ class FilesController extends Controller
 
         if ($user->tanent) {
             $tanentId = $user->tanent->id;
+            $projects = Project::where('tanent_id', $tanentId)->orderBy('id', 'asc')->get();
         } elseif ($user->expert) {
             $tanentId = $user->expert->tanent_id;
+            $expertId = $user->expert->id;
+            // Only show projects assigned to expert
+            $projects = Project::with('projectAssigns')
+                ->where('tanent_id', $tanentId)
+                ->whereHas('projectAssigns', function ($query) use ($expertId) {
+                    $query->where('expert_id', $expertId);
+                })
+                ->orderBy('id', 'asc')
+                ->get();
         }
 
-        $projects = Project::where('tanent_id', $tanentId)->orderBy('id', 'asc')->get();
         return view('files.create', compact('projects'));
     }
 
@@ -97,7 +106,7 @@ class FilesController extends Controller
             } else {
                 flash()->options([
                     'timeout' => 3000,
-                    'position' => 'bottom-center',  
+                    'position' => 'bottom-center',
                 ])->error('Sorry: File is required to Upload!');
                 return redirect()->back();
             }
@@ -158,8 +167,8 @@ class FilesController extends Controller
     public function edit(string $id)
     {
         if (!auth()->user()->hasPermissionTo('manage project deliverables')) {
-             abort(403, 'You do not have permission to view this page.');
-         }
+            abort(403, 'You do not have permission to view this page.');
+        }
 
         $file = file::with('project')->find($id);
         if (empty($file)) {
@@ -174,11 +183,20 @@ class FilesController extends Controller
 
         if ($user->tanent) {
             $tanentId = $user->tanent->id;
+            $projects = Project::where('tanent_id', $tanentId)->orderBy('id', 'asc')->get();
         } elseif ($user->expert) {
             $tanentId = $user->expert->tanent_id;
+            $expertId = $user->expert->id;
+            // Only show projects assigned to expert
+            $projects = Project::with('projectAssigns')
+                ->where('tanent_id', $tanentId)
+                ->whereHas('projectAssigns', function ($query) use ($expertId) {
+                    $query->where('expert_id', $expertId);
+                })
+                ->orderBy('id', 'asc')
+                ->get();
         }
 
-        $projects = Project::where('tanent_id', $tanentId)->orderBy('id', 'asc')->get();
         return view('files.edit', compact('projects', 'file'));
     }
 
@@ -259,7 +277,7 @@ class FilesController extends Controller
      */
     public function destroy(string $id)
     {
-         $file = file::with('project')->find($id);
+        $file = file::with('project')->find($id);
         if (empty($file)) {
             flash()->options([
                 'timeout' => 3000,

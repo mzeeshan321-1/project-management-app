@@ -31,15 +31,15 @@
                         </div>
                         <!-- Table with centered content -->
                         <div class="table-responsive">
-                            <table class="table datatable text-nowrap">
+                            <table class="table datatable">
                                 <thead>
                                     <tr class="text-center">
                                         <th class="text-center align-middle">F.ID</th>
+                                        <th class="text-center align-middle">File Name</th>
                                         <th class="text-center align-middle">Project</th>
                                         @role('middleman')
-                                        <th class="align-middle">Uploaded By</th>
+                                            <th class="align-middle">Uploaded By</th>
                                         @endrole
-                                        <th class="text-center align-middle">File Name</th>
                                         <th class="text-center align-middle">Description</th>
                                         <th class="text-center align-middle">File Type</th>
                                         <th class="text-center align-middle">Action</th>
@@ -51,7 +51,13 @@
                                             <tr>
                                                 <td class="text-center align-middle">{{ $file->id }}</td>
                                                 <td class="text-center align-middle">
-                                                    <a href="{{ route('projects.show', $file->project->id) }}">
+                                                    <a class="fw-bold" href="{{ asset('images/' . $file->file_name) }}" target="_blank">
+                                                        {{ $file->file_name ? substr($file->file_name, 0, strrpos($file->file_name, '.')) : 'N/A' }}
+                                                    </a>
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <a class="fw-bold"
+                                                        href="{{ route('projects.show', $file->project->id) }}">
                                                         {{ $file->project->title }}
                                                     </a>
                                                 </td>
@@ -60,7 +66,6 @@
                                                         {{ $file->user ? $file->user->first_name . ' ' . $file->user->last_name : 'N/A' }}
                                                     </td>
                                                 @endrole
-                                                <td class="text-center align-middle">{{ $file->file_name ?? 'N/A' }}</td>
                                                 <td class="text-center align-middle">{{ $file->description ?? 'N/A' }}</td>
                                                 <td class="text-center align-middle">
                                                     @if ($file->file_type == 'image')
@@ -80,12 +85,18 @@
                                                         <ul class="dropdown-menu dropdown-menu-end"
                                                             style="position: fixed;">
                                                             <li>
+                                                                <a class="dropdown-item" download
+                                                                    href="{{ url('images/', $file->file_name) }}">
+                                                                    <i class="bi bi-download me-2"></i> Download
+                                                                </a>
+                                                            </li>
+                                                            <li>
                                                                 <a href="{{ route('projects.show', $file->project->id) }}"
                                                                     class="dropdown-item">
                                                                     <i class="ri-eye-line"></i> Show
                                                                 </a>
                                                             </li>
-                                                            @can('manage projects')
+                                                            @role(['middleman', 'expert'])
                                                                 <li>
                                                                     <a class="dropdown-item"
                                                                         href="{{ route('files.edit', $file->id) }}">
@@ -93,19 +104,17 @@
                                                                     </a>
                                                                 </li>
                                                                 <li>
-                                                                    <form
-                                                                        action="{{ route('files.delete', $file->id) }}"
+                                                                    <form action="{{ route('files.delete', $file->id) }}"
                                                                         method="POST">
                                                                         @csrf
                                                                         @method('DELETE')
-                                                                        <button type="submit"
-                                                                            class="dropdown-item text-danger"
+                                                                        <button type="submit" class="dropdown-item text-danger"
                                                                             onclick="return confirm('Are you sure you want to delete this file?')">
                                                                             <i class="bi bi-trash me-2"></i> Delete
                                                                         </button>
                                                                     </form>
                                                                 </li>
-                                                            @endcan
+                                                            @endrole
                                                         </ul>
                                                     </div>
                                                 </td>

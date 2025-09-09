@@ -1,26 +1,26 @@
 @extends('layouts.app')
 
 @section('title')
-    <title>Create Tanent Account</title>
+    <title>Create Tenant Account</title>
 @endsection
 
 @section('content')
     <div class="pagetitle">
-        <h1>Create Tanent Account</h1>
+        <h1>Create Tenant Account</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('middleman.index') }}">Tanents</a></li>
-                <li class="breadcrumb-item active">Create Tanent Account</li>
+                <li class="breadcrumb-item"><a href="{{ route('middleman.index') }}">Tenants</a></li>
+                <li class="breadcrumb-item active">Create Tenant Account</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
-    <div class="text-end mb-2" title="Back to Tanents">
+    <div class="text-end mb-2" title="Back to Tenants">
         <a href="{{ route('middleman.index') }}" class="btn btn-primary"><i class="ri-arrow-left-s-line"></i></a>
     </div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Tanent Details</h5>
+            <h5 class="card-title">Tenant Details</h5>
             <!-- Floating Labels Form -->
             <form method="post" action="{{ route('middleman.store') }}" class="row g-3" enctype="multipart/form-data">
                 @csrf
@@ -84,7 +84,7 @@
                         <label for="Status">Status</label>
                     </div>
                 </div>
-                <div class="col-md-12 mt-5">
+                <div class="col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="input-group pt-3">
@@ -96,10 +96,10 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="offset-md-4 col-md-4 mt-3">
+                            <div class="d-flex justify-content-center mt-3">
                                 <img src="" alt="Select Image" id="preview" class="img-thumbnail" style="display: none;">
-                                <div id="image-name" class="mt-2 text-center" style="display: none;"></div>
                             </div>
+                            <div id="image-name" class="text-center mt-2" style="display: none;"></div>
                         </div>
                     </div>
                 </div>

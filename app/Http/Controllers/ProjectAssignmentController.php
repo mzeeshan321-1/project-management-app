@@ -75,6 +75,11 @@ class ProjectAssignmentController extends Controller
                 'budget' => $request->budget,
             ]);
 
+            $project = Project::find($request->project_id);
+            if ($project) {
+                $project->update(['status' => 'in_progress']);
+            }
+
             flash()->options([
                 'timeout' => 3000,
                 'position' => 'bottom-center',
