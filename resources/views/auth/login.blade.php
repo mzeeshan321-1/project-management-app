@@ -11,15 +11,12 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-                        <div class="d-flex justify-content-center py-4">
-                            <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                <img src="assets/img/logo.png" alt="">
-                                <span class="d-none d-lg-block">Genixstack</span>
-                            </a>
-                        </div><!-- End Logo -->
+                        <a href="{{ route('dashboard') }}" class="mb-3">
+                                <img src="{{ asset('assets/img/logo.png') }}" class="light-logo" style="width:200px;">
+                                <img src="{{ asset('assets/img/logo-light.png') }}" class="dark-logo" style="width:200px;">
+                        </a>
 
                         <div class="card mb-1">
-
                             <div class="card-body">
 
                                 <div class="pt-4 pb-2">
