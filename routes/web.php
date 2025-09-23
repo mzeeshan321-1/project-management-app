@@ -20,7 +20,8 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::middleware('role:super-admin|middleman|client|expert')->get('dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
 
     // Middleman view Route
     Route::get('/middleman', [MiddlemanController::class, 'index'])->name('middleman.index');

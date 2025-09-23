@@ -29,8 +29,20 @@ class AuthenticatedSessionController extends Controller
             $request->authenticate();
             $request->session()->regenerate();
 
-            // Update last login
             $user = Auth::user();
+            
+            // Check if user has any roles
+            if (!$user->roles()->count()) {
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                flash()->options([
+                    'timeout' => 3000,
+                    'position' => 'bottom-center',
+                ])->error('Access denied. You are not allowed to login.');
+                return redirect()->route('login');
+            }
+
             if ($user->status === 'suspended') {
                 Auth::guard('web')->logout();
                 $request->session()->invalidate();
@@ -42,6 +54,7 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('login');
             }
 
+            // Update last login
             $user->update([
                 'last_login' => now(),
                 'status' => 'active',

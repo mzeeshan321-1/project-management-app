@@ -31,19 +31,17 @@
                                 @endif
 
                                 <form method="POST" action="{{ route('login') }}" class="row g-3 needs-validation"
-                                    novalidate>
+                                    >
                                     @csrf
                                     <div class="col-12">
                                         <label for="Email" class="form-label">Email</label>
                                         <input type="email" name="email" value="{{ old('email') }}"
                                             class="form-control" id="Email" required autofocus autocomplete="email">
-                                        <small class="invalid-feedback" role="alert">Please enter your email</small>
                                     </div>
 
                                     <div class="col-12">
                                         <label for="Password" class="form-label">Password</label>
                                         <input type="password" name="password" class="form-control" id="Password" required autocomplete="current-password">
-                                        <small class="invalid-feedback" role="alert">Please enter your Password</small>
                                         <small class="text-muted">Minimum 8 characters</small>
                                     </div>
 
