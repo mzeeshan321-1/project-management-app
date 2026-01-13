@@ -57,7 +57,6 @@ class MiddlemanController extends Controller
     public function create()
     {
         return view('middleman.create');
-
     }
 
     /**

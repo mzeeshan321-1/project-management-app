@@ -30,8 +30,7 @@
                                     </div>
                                 @endif
 
-                                <form method="POST" action="{{ route('login') }}" class="row g-3 needs-validation"
-                                    >
+                                <form method="POST" action="{{ route('login') }}" class="row g-3 needs-validation">
                                     @csrf
                                     <div class="col-12">
                                         <label for="Email" class="form-label">Email</label>
