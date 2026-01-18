@@ -69,7 +69,7 @@ class UserFactory extends Factory
         });
     }
     
-    public function Client($tenantId)
+    public function Client($tenantId = null)
     {
         return $this->afterCreating(function ($user) use ($tenantId) {
             $user->assignRole('client');

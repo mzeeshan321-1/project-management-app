@@ -10,6 +10,60 @@ beforeEach(function () {
     $this->superAdmin = User::factory()->SuperAdmin()->create();
 });
 
+describe('Tanent Management - Super Admin - Validation', function () {
+
+    test('Validation fails when required fields are Empty', function () {
+        $UserRecord = [
+            'first_name' => '',
+            'last_name' => '',
+            'email' => '',
+            'password' => '',
+            'password_confirmation' => '',
+            'status' => 'active',
+        ];
+
+        actingAs($this->superAdmin)
+            ->post(route('middleman.store'), $UserRecord);
+
+        expect(session('flasher::envelopes'))->not->toBeEmpty();
+    });
+
+    test('Validation fails when Password and/or Confirm Password does not match', function () {
+        $UserRecord = [
+            'first_name' => 'Test',
+            'last_name' => 'Tanent',
+            'email' => 'testTanent@app.com',
+            'password' => 'password',
+            'password_confirmation' => 'wrong-password',
+            'status' => 'active',
+        ];
+
+        actingAs($this->superAdmin)
+            ->post(route('middleman.store'), $UserRecord);
+
+        expect(session('flasher::envelopes'))->not->toBeEmpty();
+    });
+
+    test('Validation fails when User already exists with same email', function () {
+        User::factory()->create([
+            'email' => 'testTanent@app.com',
+        ]);
+
+        $userRecord = [
+            'first_name' => 'Test',
+            'last_name' => 'Tanent',
+            'email' => 'testTanent@app.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'status' => 'active',
+        ];
+        actingAs($this->superAdmin)
+            ->post(route('middleman.store'), $userRecord);
+
+        expect(session('flasher::envelopes'))->not->toBeEmpty();
+    });
+});
+
 describe('Tanent Management - Super Admin', function () {
 
     test('Super Admin can Access List of Tanents', function () {
@@ -107,6 +161,10 @@ describe('Tanent Management - Super Admin', function () {
         actingAs($this->superAdmin)
             ->delete(route('middleman.delete', $tanent->id))
             ->assertRedirect(route('middleman.index'));
+            
+        $this->assertDatabaseMissing('users', [
+            'id' => $tanent->id,
+        ]);
     });
 });
 
@@ -218,59 +276,5 @@ describe('Tanent Management - Client', function () {
         actingAs($client)
             ->delete(route('middleman.delete', $tanent->tanent->id))
             ->assertStatus(403);
-    });
-});
-
-describe('Tanent Management - Validation', function () {
-
-    test('Validation fails when required fields are Empty', function () {
-        $UserRecord = [
-            'first_name' => '',
-            'last_name' => '',
-            'email' => '',
-            'password' => '',
-            'password_confirmation' => '',
-            'status' => 'active',
-        ];
-
-        actingAs($this->superAdmin)
-            ->post(route('middleman.store'), $UserRecord);
-
-        expect(session('flasher::envelopes'))->not->toBeEmpty();
-    });
-
-    test('Validation fails when Password and/or Confirm Password does not match', function () {
-        $UserRecord = [
-            'first_name' => 'Test',
-            'last_name' => 'Tanent',
-            'email' => 'testTanent@app.com',
-            'password' => 'password',
-            'password_confirmation' => 'wrong-password',
-            'status' => 'active',
-        ];
-
-        actingAs($this->superAdmin)
-            ->post(route('middleman.store'), $UserRecord);
-
-        expect(session('flasher::envelopes'))->not->toBeEmpty();
-    });
-
-    test('Validation fails when User already exists with same email', function () {
-        User::factory()->create([
-            'email' => 'testTanent@app.com',
-        ]);
-
-        $userRecord = [
-            'first_name' => 'Test',
-            'last_name' => 'Tanent',
-            'email' => 'testTanent@app.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-            'status' => 'active',
-        ];
-        actingAs($this->superAdmin)
-            ->post(route('middleman.store'), $userRecord);
-
-        expect(session('flasher::envelopes'))->not->toBeEmpty();
     });
 });

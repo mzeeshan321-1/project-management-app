@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Expert;
+use App\Models\Client;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->tanent = User::factory()->Tanent()->create();
 });
 
-describe('Expert Management - Tanent - Validation', function () {
+describe('Client Management - Tanent - Validation', function () {
 
     test('Validation fails when required fields are Empty', function () {
         $UserRecord = [
@@ -24,7 +24,7 @@ describe('Expert Management - Tanent - Validation', function () {
         ];
 
         actingAs($this->tanent)
-            ->post(route('experts.store'), $UserRecord);
+            ->post(route('clients.store'), $UserRecord);
 
         expect(session('flasher::envelopes'))->not->toBeEmpty();
     });
@@ -32,74 +32,74 @@ describe('Expert Management - Tanent - Validation', function () {
     test('Validation fails when Password and/or Confirm Password does not match', function () {
         $UserRecord = [
             'first_name' => 'Test',
-            'last_name' => 'Expert',
-            'email' => 'testExpert@app.com',
+            'last_name' => 'Client',
+            'email' => 'testClient@app.com',
             'password' => 'password',
             'password_confirmation' => 'wrong-password',
             'status' => 'active',
         ];
-        
+
         actingAs($this->tanent)
-            ->post(route('experts.store'), $UserRecord);
+            ->post(route('clients.store'), $UserRecord);
 
         expect(session('flasher::envelopes'))->not->toBeEmpty();
     });
 
     test('Validation fails when User already exists with same email', function () {
         User::factory()->create([
-            'email' => 'testTanent@app.com',
+            'email' => 'testClient@app.com',
         ]);
 
         $userRecord = [
             'first_name' => 'Test',
-            'last_name' => 'Tanent',
-            'email' => 'testTanent@app.com',
+            'last_name' => 'Client',
+            'email' => 'testClient@app.com',
             'password' => 'password',
             'password_confirmation' => 'password',
             'status' => 'active',
         ];
         actingAs($this->tanent)
-            ->post(route('experts.store'), $userRecord);
+            ->post(route('clients.store'), $userRecord);
 
         expect(session('flasher::envelopes'))->not->toBeEmpty();
     });
 });
 
-describe('Expert Management - Tanent', function () {
+describe('Client Management - Tanent', function () {
 
-    test('Tanent can Access List of Experts', function () {
+    test('Tanent can Access List of Clients', function () {
         actingAs($this->tanent)
-            ->get(route('experts.index'))
-            ->assertSee('Experts')
+            ->get(route('clients.index'))
+            ->assertSee('Clients')
             ->assertStatus(200);
     });
 
-    test('Tanent can See Only his Own Experts and cannot See Experts of Other Tanents', function () {
+    test('Tanent can See Only his Own Clients and cannot See Clients of Other Tanents', function () {
         $otherTanent = User::factory()->Tanent()->create();
-        $experts = User::factory(2)->Expert($this->tanent->tanent->id)->create();
-        $otherTanentExperts = User::factory(2)->Expert($otherTanent->tanent->id)->create();
+        $clients = User::factory(2)->Client($this->tanent->tanent->id)->create();
+        $otherTanentClients = User::factory(2)->Client($otherTanent->tanent->id)->create();
 
         actingAs($this->tanent)
-            ->get(route('experts.index'))
-            ->assertSee($experts[0]->first_name)
-            ->assertSee($experts[1]->first_name)
-            ->assertDontSee($otherTanentExperts[0]->first_name)
-            ->assertDontSee($otherTanentExperts[1]->first_name)
+            ->get(route('clients.index'))
+            ->assertSee($clients[0]->first_name)
+            ->assertSee($clients[1]->first_name)
+            ->assertDontSee($otherTanentClients[0]->first_name)
+            ->assertDontSee($otherTanentClients[1]->first_name)
             ->assertStatus(200);
     });
 
-    test('Tanent can Access Expert Creation Page', function () {
+    test('Tanent can Access Client Creation Page', function () {
         actingAs($this->tanent)
-            ->get(route('experts.create'))
-            ->assertSee('Create Expert Account')
+            ->get(route('clients.create'))
+            ->assertSee('Create Client Account')
             ->assertStatus(200);
     });
 
-    test('Tanent can Create New Expert(s)', function () {
+    test('Tanent can Create New Client(s)', function () {
         $UserRecord = [
             'first_name' => 'Test',
-            'last_name' => 'Expert',
-            'email' => 'testExpert@app.com',
+            'last_name' => 'Client',
+            'email' => 'testClient@app.com',
             'password' => 'password',
             'password_confirmation' => 'password',
             'address' => 'Test Address',
@@ -109,39 +109,39 @@ describe('Expert Management - Tanent', function () {
         ];
 
         actingAs($this->tanent)
-            ->post(route('experts.store'), $UserRecord)
-            ->assertRedirect(route('experts.index'));
+            ->post(route('clients.store'), $UserRecord)
+            ->assertRedirect(route('clients.index'));
 
         $NewUser = User::where('email', $UserRecord['email'])->first();
         expect($NewUser)->not->toBeNull();
         expect(Hash::check('password', $NewUser->password))->toBeTrue();
 
-        $NewExpert = Expert::where('tanent_id', $this->tanent->tanent->id)
+        $NewClient = Client::where('tanent_id', $this->tanent->tanent->id)
             ->where('user_id', $NewUser->id)->first();
-        expect($NewExpert)->not->toBeNull();
+        expect($NewClient)->not->toBeNull();
 
-        $this->assertDatabaseHas('experts', [
+        $this->assertDatabaseHas('clients', [
             'user_id' => $NewUser->id,
         ]);
 
         $this->assertDatabaseHas('users', [
-            'email' => 'testExpert@app.com'
+            'email' => 'testClient@app.com'
         ]);
     });
 
     test('Tanent can Access Edit Expert Page', function () {
-        $expert = User::factory()->Expert($this->tanent->tanent->id)->create();
+        $client = User::factory()->Client($this->tanent->tanent->id)->create();
         actingAs($this->tanent)
-            ->get(route('experts.edit', $expert->expert->id))
-            ->assertSee('Edit Expert Account')
+            ->get(route('clients.edit', $client->client->id))
+            ->assertSee('Edit Client Account')
             ->assertStatus(200);
     });
 
-    test('Tanent can Edit his Expert', function () {
-        $expert = User::factory()->Expert($this->tanent->tanent->id)->create();
+    test('Tanent can Edit his Client', function () {
+        $client = User::factory()->Client($this->tanent->tanent->id)->create();
         $updatedData = [
-            'first_name' => 'UpdatedExpert',
-            'email' => 'UpdatedExpert@app.com',
+            'first_name' => 'UpdatedClient',
+            'email' => 'UpdatedClient@app.com',
             'password' => 'UpdatedPassword',
             'password_confirmation' => 'UpdatedPassword',
             'address' => 'UpdatedAddress',
@@ -150,117 +150,117 @@ describe('Expert Management - Tanent', function () {
         ];
 
         actingAs($this->tanent)
-            ->put(route('experts.update', $expert->id), $updatedData)
-            ->assertRedirect(route('experts.index'));
+            ->put(route('clients.update', $client->id), $updatedData)
+            ->assertRedirect(route('clients.index'));
 
         $this->assertDatabaseHas('users', [
-            'id' => $expert->id,
-            'first_name' => 'UpdatedExpert',
-            'email' => 'UpdatedExpert@app.com',
+            'id' => $client->id,
+            'first_name' => 'UpdatedClient',
+            'email' => 'UpdatedClient@app.com',
         ]);
     });
 
     test('Tanent can Delete his Expert', function () {
-        $expert = User::factory()->Expert($this->tanent->tanent->id)->create();
+        $client = User::factory()->Client($this->tanent->tanent->id)->create();
         actingAs($this->tanent)
-            ->delete(route('experts.delete', $expert->expert->id))
-            ->assertRedirect(route('experts.index'));
+            ->delete(route('clients.delete', $client->client->id))
+            ->assertRedirect(route('clients.index'));
 
         $this->assertDatabaseMissing('users', [
-            'id' => $expert->id,
+            'id' => $client->id,
         ]);
 
-        $this->assertDatabaseMissing('experts', [
-            'user_id' => $expert->id,
+        $this->assertDatabaseMissing('clients', [
+            'user_id' => $client->id,
         ]);
     });
 });
 
-describe('Expert Management - Super Admin', function () {
+describe('Client Management - Super Admin', function () {
 
-    test('Super Admin can not See Experts', function () {
+    test('Super Admin can not See Client', function () {
         actingAs($this->superAdmin)
-            ->get(route('experts.index'))
+            ->get(route('clients.index'))
             ->assertStatus(403);
     });
 
-    test('Super Admin can not Create Experts', function () {
+    test('Super Admin can not Create Client', function () {
         actingAs($this->superAdmin)
-            ->get(route('experts.create'))
+            ->get(route('clients.create'))
             ->assertStatus(403);
     });
 
-    test('Super Admin can not Edit Experts', function () {
+    test('Super Admin can not Edit Client', function () {
         actingAs($this->superAdmin)
-            ->get(route('experts.edit', 1))
+            ->get(route('clients.edit', 1))
             ->assertStatus(403);
     });
 
-    test('Super Admin can not Delete Experts', function () {
+    test('Super Admin can not Delete Client', function () {
         actingAs($this->superAdmin)
-            ->delete(route('experts.delete', 1))
+            ->delete(route('clients.delete', 1))
             ->assertStatus(403);
     });
 });
 
-describe('Expert Management - Expert', function () {
+describe('Client Management - Expert', function () {
 
-    test('Expert can not See Experts', function () {
+    test('Expert can not See Client', function () {
         $expert = User::factory()->Expert($this->tanent->tanent->id)->create();
         actingAs($expert)
-            ->get(route('experts.index'))
+            ->get(route('clients.index'))
             ->assertStatus(403);
     });
 
-    test('Expert can not Create Experts', function () {
+    test('Expert can not Create Client', function () {
         $expert = User::factory()->Expert($this->tanent->tanent->id)->create();
         actingAs($expert)
-            ->get(route('experts.create'))
+            ->get(route('clients.create'))
             ->assertStatus(403);
     });
 
-    test('Expert can not Edit Experts', function () {
+    test('Expert can not Edit Client', function () {
         $expert = User::factory()->Expert($this->tanent->tanent->id)->create();
         actingAs($expert)
-            ->get(route('experts.edit', 1))
+            ->get(route('clients.edit', 1))
             ->assertStatus(403);
     });
 
-    test('Expert can not Delete Experts', function () {
+    test('Expert can not Delete Client', function () {
         $expert = User::factory()->Expert($this->tanent->tanent->id)->create();
         actingAs($expert)
-            ->delete(route('experts.delete', 1))
+            ->delete(route('clients.delete', 1))
             ->assertStatus(403);
     });
 });
 
-describe('Expert Management - Client', function () {
+describe('Client Management - Client', function () {
 
-    test('Client can not See Experts', function () {
+    test('Client can not See Client', function () {
         $client = User::factory()->Client($this->tanent->tanent->id)->create();
         actingAs($client)
-            ->get(route('experts.index'))
+            ->get(route('clients.index'))
             ->assertStatus(403);
     });
 
-    test('Client can not Create Experts', function () {
+    test('Client can not Create Client', function () {
         $client = User::factory()->Client($this->tanent->tanent->id)->create();
         actingAs($client)
-            ->get(route('experts.create'))
+            ->get(route('clients.create'))
             ->assertStatus(403);
     });
 
-    test('Client can not Edit Experts', function () {
+    test('Client can not Edit Client', function () {
         $client = User::factory()->Client($this->tanent->tanent->id)->create();
         actingAs($client)
-            ->get(route('experts.edit', 1))
+            ->get(route('clients.edit', 1))
             ->assertStatus(403);
     });
 
-    test('Client can not Delete Experts', function () {
+    test('Client can not Delete Client', function () {
         $client = User::factory()->Client($this->tanent->tanent->id)->create();
         actingAs($client)
-            ->delete(route('experts.delete', 1))
+            ->delete(route('clients.delete', 1))
             ->assertStatus(403);
     });
 });
