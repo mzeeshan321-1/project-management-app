@@ -28,7 +28,7 @@
                 <div class="col-md-6">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="title" value="{{ $project->title }}" id="Title"
-                            placeholder="Title">
+                            placeholder="Title" required>
                         <label for="Title">Title</label>
                     </div>
                 </div>

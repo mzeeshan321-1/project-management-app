@@ -109,10 +109,18 @@ class ProjectsController extends Controller
         }
 
         try {
-            $startDate = Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d');
-            $deadline = Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d');
+            // $startDate = Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d');
+            // $deadline = Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d');
 
-             if ($request->budget <= 0) {
+            $startDate = $request->start_date
+                ? Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d')
+                : null;
+
+            $deadline = $request->deadline
+                ? Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d')
+                : null;
+
+            if ($request->budget <= 0) {
                 flash()->options([
                     'timeout' => 3000,
                     'position' => 'bottom-center',
@@ -157,8 +165,7 @@ class ProjectsController extends Controller
 
         if ($user->tanent) {
             $tanentId = $user->tanent->id;
-        }
-        elseif ($user->expert) {
+        } elseif ($user->expert) {
             $tanentId = $user->expert->tanent_id;
             $expertId = $user->expert->id;
         } elseif ($user->client) {
@@ -250,8 +257,16 @@ class ProjectsController extends Controller
         }
 
         try {
-            $startDate = Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d');
-            $deadline = Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d');
+            // $startDate = Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d');
+            // $deadline = Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d');
+
+            $startDate = $request->start_date
+                ? Carbon::createFromFormat('d-M-Y', $request->start_date)->format('Y-m-d')
+                : null;
+
+            $deadline = $request->deadline
+                ? Carbon::createFromFormat('d-M-Y', $request->deadline)->format('Y-m-d')
+                : null;
 
             if ($request->budget <= 0) {
                 flash()->options([

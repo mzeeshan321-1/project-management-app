@@ -27,7 +27,7 @@
                 <div class="col-md-6">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="title" value="{{ old('title') }}" id="Title"
-                            placeholder="Title">
+                            placeholder="Title" required>
                         <label for="Title">Title</label>
                     </div>
                 </div>
