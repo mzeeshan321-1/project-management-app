@@ -159,6 +159,9 @@ class ProjectsController extends Controller
      */
     public function show(string $id)
     {
+        if (!auth()->user()->hasPermissionTo('view projects')) {
+            abort(403, 'You do not have permission to view this page.');
+        }
         $user = auth()->user();
         $tanentId = null;
         $expertId = null;

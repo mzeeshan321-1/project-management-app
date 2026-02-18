@@ -17,7 +17,7 @@ class TasksController extends Controller
     public function index()
     {
         if (!auth()->user()->hasPermissionTo('view tasks')) {
-            abort(403, 'You do not have permission to view this page.');
+            abort(403, 'You do not have the Permission to Access this page.');
         }
         $user = auth()->user();
         $tanentId = null;
@@ -134,6 +134,9 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
+        if (!auth()->user()->hasPermissionTo('view tasks')) {
+            abort(403, 'You do not have the Permission to Access this page.');
+        }
         $task = Task::find($id);
         if (empty($task)) {
             flash()->options([
