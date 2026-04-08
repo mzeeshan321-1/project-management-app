@@ -1,61 +1,128 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Project Management App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, multi-tenant project management platform for teams and companies to organize projects, tasks, users, and finances.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Problem Statement
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Many organizations struggle to efficiently manage multiple projects, users with different roles, and client interactions in one system—especially when working across different teams (tenants) and needing visibility into finances and team productivity. Manual tracking or fragmented tools lead to mistakes, data leaks, and project delays.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Solution & Approach
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+We built **Project Management App** to bring all core management tasks into a single, secure web platform. Our solution focuses on:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Segregating data and workflows per tenant (organization)
+- Robust role-based access so the right users see the right data
+- Comprehensive dashboards for at-a-glance project health
+- Simple forms and navigation to ensure adoption by non-technical users
+- Secure, modern authentication for all user actions
+- File uploads, financial tracking, and user notifications all in one place
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Key Difficulties & How We Solved Them
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Multi-Tenancy Isolation:**  
+  We carefully designed our schema and queries so each tenant’s data remains private and fully isolated, avoiding data mix-ups.
+- **Complex Role & Permission Logic:**  
+  The app supports Super Admin, Tenant, Expert, and Client, each with unique needs. We used the excellent [spatie/laravel-permission](https://github.com/spatie/laravel-permission) package to centrally manage and assign flexible roles and granular permissions with minimal custom code.
+- **File Management & Security:**  
+  Storing and retrieving tenant-specific files securely was tackled by associating uploads to projects or tasks, verifying permissions on every action.
+- **Profit & Financial Handling:**  
+  We automated profit/loss calculations and displayed them with clear reporting for non-technical stakeholders.
+- **Bug Prevention & Quality:**  
+  We invested in automated testing for critical business logic and endpoints. This minimizes regressions and ensures the reliability of the app.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Features
+
+- **Multi-Tenancy:** Isolated data for each organization (tenant)
+- **Role-Based Access:** Super Admin, Tenant, Expert, Client—with Spatie-backed permissions
+- **Project & Task Management:** Create, assign, and track projects and their tasks
+- **Client & Expert Management:** Add, manage, and relate users per tenant
+- **File Uploads:** Attach files to projects and tasks
+- **Profit Tracking:** Project budgets, costs, payments, and profit/loss reports
+- **Dashboards:** Role-specific statistics and summaries
+- **Notifications:** Flash messages keep the user informed
+- **Secure Auth:** Registration, login/logout, email verification, password management
+- **Responsive UI:** Clean design and mobile-friendly layout
+- **Frontend Template:** One template for multiple roles/users
+
+---
+
+## Tech Stack
+
+- **Backend:** PHP, Laravel
+- **Frontend:** HTML, CSS, JS, Blade (Laravel templating), Bootstrap.
+- **Database:** MySQL (via Laravel migrations)
+- **Roles/Permissions:** [spatie/laravel-permission](https://github.com/spatie/laravel-permission)
+- **Build Tools:** Vite, npm (for JS and CSS assets)
+- **Testing:** PestPHP
+
+---
+
+## Folder Structure
+
+```
+app/                # Controllers, models, business logic
+database/           # Migrations
+resources/views/    # Blade templates (UI)
+public/assets/      # JS, CSS, icons, TinyMCE
+```
+
+---
+
+## Database Overview
+
+- `users`      — User accounts (linked to tenants, experts, clients)
+- `tenents`    — Organizations
+- `clients`    — Clients per tenant
+- `experts`    — Team members
+- `projects`   — Projects with assignments and statuses
+- `tasks`      — Project tasks (due date, priority, expert)
+- `files`      — Uploaded files for tasks/projects
+- `profits`    — Financial data per project
+
+---
+
+## How We Ensure Quality
+
+- Automated tests for business logic and endpoints
+- Manual testing for UI/UX workflows
+- Code reviews to catch edge cases and potential data leaks
+
+---
+
+## Getting Started
+
+1. **Clone:**  
+   `git clone https://github.com/mzeeshan321-1/project-management-app.git`
+2. **Install backend dependencies:**  
+   `composer install`
+3. **Install frontend dependencies:**  
+   `npm install`
+4. **Configure environment:**  
+   Copy `.env.example` to `.env`, update DB credentials
+5. **Run migrations:**  
+   `php artisan migrate`
+6. **Build assets:**  
+   `npm run dev`
+7. **Start server:**  
+   `php artisan serve`
+8. **Run tests (optional):**  
+   `./vendor/bin/pest`
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Pull requests and suggestions are welcome.  
+For bugs or feature requests, please open an issue.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**© 2026 Genixstack. All Rights Reserved.**
