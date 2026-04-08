@@ -18,14 +18,14 @@ class ProfileController extends Controller
     /**
      * Display the authenticated user's profile.
      */
-    public function edit(Request $request): View
-    {
-        $user = $request->user()->load(['tanent.user', 'expert', 'client']);
+    // public function edit(Request $request): View
+    // {
+    //     $user = $request->user()->load(['tanent.user', 'expert', 'client']);
 
-        return view('profile.edit', [
-            'user' => $user,
-        ]);
-    }
+    //     return view('profile.edit', [
+    //         'user' => $user,
+    //     ]);
+    // }
 
     /**
      * Display a list of profiles based on user role.
@@ -40,18 +40,18 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
 
-        $request->user()->save();
+    //     $request->user()->save();
 
-        return redirect()->route('profile.edit')->with('status', 'profile-updated');
-    }
+    //     return redirect()->route('profile.edit')->with('status', 'profile-updated');
+    // }
 
     /**
      * Update the user's profile image.

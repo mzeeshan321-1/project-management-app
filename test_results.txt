@@ -1,0 +1,175 @@
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\FinancialManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Creation Validation[39m[90m → cli[39m[90m…[39m [90m0.95s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Creation Validation[39m[90m → pay[39m[90m…[39m [90m0.20s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Creation Validation[39m[90m → pay[39m[90m…[39m [90m0.18s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Creation Validation[39m[90m → pay[39m[90m…[39m [90m0.22s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Type and Status[39m[90m → payment[39m[90m…[39m [90m0.19s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Type and Status[39m[90m → payment[39m[90m…[39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Type and Status[39m[90m → payment[39m[90m…[39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Type and Status[39m[90m → payment[39m[90m…[39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Type and Status[39m[90m → payment[39m[90m…[39m [90m0.13s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Type and Status[39m[90m → payment[39m[90m…[39m [90m0.13s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Relations[39m[90m → payment belon[39m[90m…[39m [90m0.17s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Relations[39m[90m → payment belon[39m[90m…[39m [90m0.19s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Relations[39m[90m → payment belon[39m[90m…[39m [90m0.27s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Relations[39m[90m → payment can h[39m[90m…[39m [90m0.11s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Relations[39m[90m → payment can h[39m[90m…[39m [90m0.16s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Filtering and Querying[39m[90m →[39m[90m… [39m [90m0.22s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Filtering and Querying[39m[90m →[39m[90m… [39m [90m0.13s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mPayment Filtering and Querying[39m[90m →[39m[90m… [39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mSuper Admin[39m[90m → super admin can vie[39m[90m…[39m [90m0.24s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mSuper Admin[39m[90m → super admin can cre[39m[90m…[39m [90m0.35s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mTanent[39m[90m → tanent has view payments[39m[90m…[39m [90m0.25s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mTanent[39m[90m → tanent can be receiver o[39m[90m…[39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mTanent[39m[90m → tanent can be sender of[39m[90m… [39m [90m0.22s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mExpert[39m[90m → expert can view payments[39m[90m…[39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mExpert[39m[90m → expert can receive payme[39m[90m…[39m [90m0.20s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mClient[39m[90m → client can create paymen[39m[90m…[39m [90m0.20s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mClient[39m[90m → client payment must equa[39m[90m…[39m [90m0.22s[39m  
+  [31;1m⨯[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mPayments[39m[90m → [39m[37mClient[39m[90m → client can view their ow[39m[90m…[39m [90m0.19s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Calculation Logi[39m[90m…[39m [90m0.10s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Calculation Logi[39m[90m…[39m [90m0.11s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Calculation Logi[39m[90m…[39m [90m0.13s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Calculation Logi[39m[90m…[39m [90m0.11s[39m  
+  [31;1m⨯[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Calculation Logi[39m[90m…[39m [90m0.11s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Record Managemen[39m[90m…[39m [90m0.25s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Record Managemen[39m[90m…[39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Record Managemen[39m[90m…[39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Record Managemen[39m[90m…[39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Record Managemen[39m[90m…[39m [90m0.18s[39m  
+  [31;1m⨯[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProject Assignments and[39m[90m…[39m [90m0.24s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProject Assignments and[39m[90m…[39m [90m0.19s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Report Access Co[39m[90m…[39m [90m0.12s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Report Access Co[39m[90m…[39m [90m0.22s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Report Access Co[39m[90m…[39m [90m0.28s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mProfit Calculation[39m[90m → [39m[37mProfit Report Access Co[39m[90m…[39m [90m0.37s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mFinancial Workflow[39m[90m → [39m[37mComplete Payment and Pr[39m[90m…[39m [90m0.23s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mFinancial Workflow[39m[90m → [39m[37mComplete Payment and Pr[39m[90m…[39m [90m0.24s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mFinancial Workflow[39m[90m → [39m[37mComplete Payment and Pr[39m[90m…[39m [90m0.26s[39m  
+  [32;1m✓[39;22m[90m [39m[37mFinancial Management[39m[90m → [39m[37mFinancial Workflow[39m[90m → [39m[37mComplete Payment and Pr[39m[90m…[39m [90m0.22s[39m  
+  [31m────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\FinancialManagementTest[22m [90m>[39m `Financial Management` →…    
+[39;1m  Failed asserting that a traversable contains App\Models\Payment Object #7410 (
+    'connection' => 'sqlite',
+    'table' => null,
+    'primaryKey' => 'id',
+    'keyType' => 'int',
+    'incrementing' => true,
+    'with' => Array &0 [],
+    'withCount' => Array &1 [],
+    'preventsLazyLoading' => false,
+    'perPage' => 15,
+    'exists' => true,
+    'wasRecentlyCreated' => true,
+    'escapeWhenCastingToString' => false,
+    'attributes' => Array &2 [
+        'project_id' => 1,
+        'sender_id' => 5,
+        'reciever_id' => 6,
+        'type' => 'credit',
+        'amount' => 46366,
+        'status' => 'returned',
+        'note' => null,
+        'upload_invoice' => null,
+        'updated_at' => '2026-04-04 08:30:30',
+        'created_at' => '2026-04-04 08:30:30',
+        'id' => 1,
+    ],
+    'original' => Array &3 [
+        'project_id' => 1,
+        'sender_id' => 5,
+        'reciever_id' => 6,
+        'type' => 'credit',
+        'amount' => 46366,
+        'status' => 'returned',
+        'note' => null,
+        'upload_invoice' => null,
+        'updated_at' => '2026-04-04 08:30:30',
+        'created_at' => '2026-04-04 08:30:30',
+        'id' => 1,
+    ],
+    'changes' => Array &4 [],
+    'previous' => Array &5 [],
+    'casts' => Array &6 [],
+    'classCastCache' => Array &7 [],
+    'attributeCastCache' => Array &8 [],
+    'dateFormat' => null,
+    'appends' => Array &9 [],
+    'dispatchesEvents' => Array &10 [],
+    'observables' => Array &11 [],
+    'relations' => Array &12 [],
+    'touches' => Array &13 [],
+    'relationAutoloadCallback' => null,
+    'relationAutoloadContext' => null,
+    'timestamps' => true,
+    'usesUniqueIds' => false,
+    'hidden' => Array &14 [],
+    'visible' => Array &15 [],
+    'fillable' => Array &16 [
+        0 => 'reciever_id',
+        1 => 'project_id',
+        2 => 'sender_id',
+        3 => 'type',
+        4 => 'amount',
+        5 => 'note',
+        6 => 'upload_invoice',
+        7 => 'status',
+    ],
+    'guarded' => Array &17 [
+        0 => '*',
+    ],
+).[39;22m
+
+  at [32mtests\Feature\FinancialManagementTest.php[39m:[32m342[39m
+    338▕                     'sender_id' => $clientUser->id,
+    339▕                     'project_id' => $project->id,
+    340▕                 ]);
+    341▕                 $clientPayments = Payment::where('sender_id', $clientUser->id)->get();
+  ➜ 342▕                 expect($clientPayments)->toContain($payment);
+    343▕             });
+    344▕         });
+    345▕     });
+    346▕
+
+  [33m1   [39m[39;1mtests\Feature\FinancialManagementTest.php[39;22m:[39;1m342[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\FinancialManagementTest[22m [90m>[39m `Financial Management` →…    
+[39;1m  Failed asserting that 0.0 is identical to 0.[39;22m
+
+  at [32mtests\Feature\FinancialManagementTest.php[39m:[32m376[39m
+    372▕             });
+    373▕ 
+    374▕             test('profit percentage is zero when budget is zero', function () {
+    375▕                 $result = Profit::calculateProfit(0, 1000);
+  ➜ 376▕                 expect($result['profit_percentage'])->toBe(0);
+    377▕             });
+    378▕         });
+    379▕ 
+    380▕         describe('Profit Record Management', function() {
+
+  [33m1   [39m[39;1mtests\Feature\FinancialManagementTest.php[39;22m:[39;1m376[39;22m
+
+  [31m────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\FinancialManagementTest[22m [90m>[39m `Financia… [41;1m QueryException [49;22m  
+[39;1m  SQLSTATE[23000]: Integrity constraint violation: 19 FOREIGN KEY constraint failed (Connection: sqlite, SQL: insert into "project_assigns" ("project_id", "expert_id", "tanent_id", "budget", "note", "updated_at", "created_at") values (1, 6, 2, 3000, ?, 2026-04-04 08:30:32, 2026-04-04 08:30:32))[39;22m
+
+  at [32mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m570[39m
+    566▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    567▕ 
+    568▕             $this->recordsHaveBeenModified();
+    569▕ 
+  ➜ 570▕             return $statement->execute();
+    571▕         });
+    572▕     }
+    573▕ 
+    574▕     /**
+
+  [33m1   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m570[39;22m
+  [33m2   [39m[39;1mvendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m811[39;22m
+
+
+  [90mTests:[39m    [31;1m3 failed[39;22m[90m,[39m[39m [39m[32;1m45 passed[39;22m[90m (70 assertions)[39m
+  [90mDuration:[39m [39m10.70s[39m
+

@@ -18,6 +18,9 @@ class FilesController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->hasPermissionTo('manage project deliverables')) {
+            abort(403, 'You do not have permission to view this page.');
+        }
         $user = auth()->user();
         $uploadedBy = $user->id;
         $tanentId = null;
@@ -107,7 +110,7 @@ class FilesController extends Controller
                 flash()->options([
                     'timeout' => 3000,
                     'position' => 'bottom-center',
-                ])->error('Sorry: File is required to Upload!');
+                ])->error('Sorry: File/Image is required to Upload!');
                 return redirect()->back();
             }
 
@@ -277,6 +280,9 @@ class FilesController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermissionTo('manage project deliverables')) {
+            abort(403, 'You do not have permission to view this page.');
+        }
         $file = file::with('project')->find($id);
         if (empty($file)) {
             flash()->options([

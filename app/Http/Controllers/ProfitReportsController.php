@@ -17,7 +17,6 @@ class ProfitReportsController extends Controller
         if (!auth()->user()->hasPermissionTo('view reports')) {
             abort(403, 'Unauthorized action.');
         }
-
         $this->calculateProfit();
         $profits = Profit::with(['project', 'project.projectAssigns', 'payment', 'tanent'])
             ->when(auth()->user()->tanent, function ($query) {
@@ -152,6 +151,9 @@ class ProfitReportsController extends Controller
 
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermissionTo('view reports')) {
+            abort(403, 'Unauthorized action.');
+        }
         $profit = Profit::find($id);
         if (empty($profit)) {
             flash()->options([

@@ -19,8 +19,8 @@ class TaskFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'due_date' => $this->faker->date,
-            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed']),
+            'due_date' => $this->faker->dateTimeBetween('now', '+1 year')->format('d-M-Y'),
+            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed', 'on_hold', 'cancelled']),
             'priority' => $this->faker->randomElement(['low', 'medium', 'high']),
         ];
     }

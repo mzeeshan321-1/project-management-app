@@ -756,17 +756,13 @@ describe('Project Management', function () {
                 'tanent_id' => $this->tanent->tanent->id,
                 'client_id' => $this->client->client->id,
             ]);
-            $task = [
+            $task = Task::factory()->make([
                 'project_id' => $project->id,
                 'tanent_id' => $this->tanent->tanent->id,
-                'title' => 'New Task',
-                'description' => 'Task Description',
-                'due_date' => '15-Feb-2026',
-                'status' => 'pending',
-                'priority' => 'medium',
-            ];
+            ]);
+
             actingAs($this->tanent)
-                ->post(route('tasks.store'), $task)
+                ->post(route('tasks.store'), $task->toArray())
                 ->assertRedirect(route('tasks.index'))
                 ->assertStatus(302);
 
@@ -777,6 +773,7 @@ describe('Project Management', function () {
                 'status' => $task['status'],
                 'priority' => $task['priority'],
             ]);
+
         });
 
         test('Tanent can Access Edit Task Page', function () {
@@ -787,6 +784,7 @@ describe('Project Management', function () {
             $task = Task::factory()->create([
                 'tanent_id' => $this->tanent->tanent->id,
                 'project_id' => $project->id,
+                'due_date' => Carbon\Carbon::today()->addDay()->format('y-m-d'),
             ]);
             actingAs($this->tanent)
                 ->get(route('tasks.edit', $task->id))
@@ -803,7 +801,6 @@ describe('Project Management', function () {
                 'tanent_id' => $this->tanent->tanent->id,
                 'project_id' => $project->id,
                 'title' => 'Old Task Name',
-                'due_date' => '15-Feb-2026',
                 'status' => 'pending',
                 'priority' => 'medium',
             ]);
@@ -811,9 +808,10 @@ describe('Project Management', function () {
                 'project_id' => $project->id,
                 'title' => 'New Task Name',
                 'status' => 'completed',
-                'due_date' => '20-Feb-2026',
+                'due_date' => Carbon\Carbon::today()->addDay()->format('d-M-Y'),
                 'priority' => 'high',
             ];
+            
             actingAs($this->tanent)
                 ->put(route('tasks.update', $task->id), $UpdatedTask)
                 ->assertRedirect(route('tasks.index'))

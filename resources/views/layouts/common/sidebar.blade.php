@@ -91,7 +91,7 @@
 
         <!-- Financial -->
         @canany(['view payments', 'manage payments', 'create payments'])
-            <li class="nav-heading">Financial</li>
+            <li class="nav-heading">Financial Management</li>
 
             @canany(['view payments', 'manage payments', 'create payments'])
                 <li class="nav-item">

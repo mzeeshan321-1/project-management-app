@@ -146,17 +146,17 @@
                                                                 <i class="ri-eye-line"></i>Show
                                                             </a>
                                                         </li>
-                                                        <li>
+                                                        {{-- <li>
                                                             <form action="{{ route('profits.delete', $profit->id) }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="dropdown-item text-danger"
-                                                                    onclick="return confirm('Are you sure you want to delete this file?')">
+                                                                    onclick="return confirm('To Properly Delete This Record, You Must First Delete The Project. Are you sure you want to delete this record?')">
                                                                     <i class="bi bi-trash me-2"></i> Delete
                                                                 </button>
                                                             </form>
-                                                        </li>
+                                                        </li> --}}
                                                     </ul>
                                                 </div>
                                             </td>

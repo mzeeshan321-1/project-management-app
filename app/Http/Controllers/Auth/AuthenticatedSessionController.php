@@ -93,6 +93,6 @@ class AuthenticatedSessionController extends Controller
             'position' => 'bottom-center',
         ])->success('You have been logged out successfully.');
 
-        return redirect('login');
+        return redirect(route('login'));
     }
 }

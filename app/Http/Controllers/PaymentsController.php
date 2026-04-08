@@ -93,6 +93,9 @@ class PaymentsController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermissionTo('create payments')) {
+            abort(403, 'You do not have permission to create payments.');
+        }
         $validator = Validator::make($request->all(), [
             'project_id' => 'required|exists:projects,id',
             'reciever_id' => 'required|exists:users,id',
@@ -197,6 +200,9 @@ class PaymentsController extends Controller
      */
     public function edit(string $id)
     {
+        if (!auth()->user()->hasPermissionTo('manage payments')) {
+            abort(403, 'You do not have permission to view payments.');
+        }
         $payment = Payment::with('receiver')->find($id);
         if (empty($payment)) {
             flash()->options([
@@ -240,6 +246,9 @@ class PaymentsController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->hasPermissionTo('manage payments')) {
+            abort(403, 'You do not have permission to view payments.');
+        }
         $payment = Payment::with('receiver')->find($id);
         if (empty($payment)) {
             flash()->options([
@@ -340,6 +349,10 @@ class PaymentsController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermissionTo('manage payments')) {
+            abort(403, 'You do not have permission to view payments.');
+        }
+
         $payment = Payment::with('receiver')->find($id);
         if (empty($payment)) {
             flash()->options([
@@ -384,6 +397,9 @@ class PaymentsController extends Controller
      */
     public function updateStatus(Request $request, string $id)
     {
+        if (!auth()->user()->hasPermissionTo('manage payments')) {
+            abort(403, 'You do not have permission to view payments.');
+        }
         $payment = Payment::find($id);
         if (empty($payment)) {
             flash()->options([
@@ -431,6 +447,9 @@ class PaymentsController extends Controller
      */
     public function details($id)
     {
+        if (!auth()->user()->hasRole('client')) {
+            abort(403, 'You do not have permission to view payments.');
+        }
         // Find project with all necessary relationships
         $project = Project::with(['client.user', 'client.tanent.user'])->find($id);
 
@@ -451,13 +470,16 @@ class PaymentsController extends Controller
             return redirect()->back();
         }
 
-        // Check if project already has a payment
-        $hasPayment = Payment::where('project_id', $id)->exists();
+        // Check if the authenticated user already has a payment for his project
+        $userId = auth()->id();
+        $hasPayment = Payment::where('project_id', $id)
+            ->where('sender_id', $userId)
+            ->exists();
         if ($hasPayment) {
             flash()->options([
                 'timeout' => 3000,
                 'position' => 'bottom-center',
-            ])->error('Payment already exists for this project.');
+            ])->error('Payment already exists for this project by you.');
             return redirect()->back();
         }
 
