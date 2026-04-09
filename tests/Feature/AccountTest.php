@@ -92,24 +92,187 @@ describe('Accounts', function () {
 
         describe('Profile Settings', function () {
 
-            describe('Super Admin', function () { });
+            describe('Validation', function () {
 
-            describe('Tanent', function () { });
+                test('First Name and Last Name are required', function () {
+                    actingAs($this->superAdmin)
+                        ->post(route('settings.update'), [
+                            'update_profile' => true,
+                            'first_name' => '',
+                            'last_name' => '',
+                            'email' => $this->superAdmin->email,
+                        ])
+                        ->assertSessionHasErrors(['first_name', 'last_name']);
+                });
+            });
 
-            describe('Expert', function () { });
+            describe('Super Admin', function () {
 
-            describe('Client', function () { });
+                test('Super Admin can View Profile Settings', function () {
+                    actingAs($this->superAdmin)
+                        ->get(route('settings.index'))
+                        ->assertStatus(200);
+                });
+
+                test('Super Admin can Update Profile Settings', function () {
+                    actingAs($this->superAdmin)
+                        ->post(route('settings.update'), [
+                            'first_name' => 'mic',
+                            'last_name' => 'mack',
+                            'email' => $this->superAdmin->email,
+                        ])
+                        ->assertRedirect(route('settings.index'))
+                        ->assertStatus(302);
+                });
+            });
+
+            describe('Tanent', function () {
+
+                test('Tanent can View Profile Settings', function () {
+                    actingAs($this->tanent)
+                        ->get(route('settings.index'))
+                        ->assertStatus(200);
+                });
+
+                test('Tanent can Update Profile Settings', function () {
+                    actingAs($this->tanent)
+                        ->post(route('settings.update'), [
+                            'first_name' => 'mic',
+                            'last_name' => 'mack',
+                            'email' => $this->tanent->email,
+                        ])
+                        ->assertRedirect(route('settings.index'))
+                        ->assertStatus(302);
+                });
+            });
+
+            describe('Expert', function () {
+
+                test('Expert can not View Profile Settings', function () {
+                    actingAs($this->expert)
+                        ->get(route('settings.index'))
+                        ->assertStatus(403);
+                });
+
+                test('Expert can not Update Profile Settings', function () {
+                    actingAs($this->expert)
+                        ->post(route('settings.update'), [])
+                        ->assertStatus(403);
+                });
+            });
+
+            describe('Client', function () {
+
+                test('Client can not View Profile Settings', function () {
+                    actingAs($this->client)
+                        ->get(route('settings.index'))
+                        ->assertStatus(403);
+                });
+
+                test('Client can not Update Profile Settings', function () {
+                    actingAs($this->client)
+                        ->post(route('settings.update'), [])
+                        ->assertStatus(403);
+                });
+            });
         });
 
         describe('Password', function () {
 
-            describe('Super Admin', function () { });
+            describe('Validation', function () {
 
-            describe('Tanent', function () { });
+                test('Current Password and New Password are required', function () {
+                    actingAs($this->superAdmin)
+                        ->post(route('settings.update'), [
+                            'update_password' => true,
+                            'current_password' => '',
+                            'password' => '',
+                            'password_confirmation' => '',
+                        ])
+                        ->assertSessionHasErrors(['current_password', 'password'], null, 'updatePassword');
+                });
 
-            describe('Expert', function () { });
+                test('New Password and Confirm Password must match', function () {
+                    actingAs($this->superAdmin)
+                        ->post(route('settings.update'), [
+                            'update_password' => true,
+                            'current_password' => 'password',
+                            'password' => 'newpassword',
+                            'password_confirmation' => 'differentpassword',
+                        ])
+                        ->assertSessionHasErrors(['password'], null, 'updatePassword');
+                });
 
-            describe('Client', function () { });
+                test('Current Password must be correct', function () {
+                    actingAs($this->superAdmin)
+                        ->post(route('settings.update'), [
+                            'update_password' => true,
+                            'current_password' => 'wrongpassword',
+                            'password' => 'newpassword',
+                            'password_confirmation' => 'newpassword',
+                        ])
+                        ->assertSessionHasErrors(['current_password'], null, 'updatePassword');
+                });
+
+                test('New Password must be at least 8 characters', function () {
+                    actingAs($this->superAdmin)
+                        ->post(route('settings.update'), [
+                            'update_password' => true,
+                            'current_password' => 'password',
+                            'password' => 'short',
+                            'password_confirmation' => 'short',
+                        ])
+                        ->assertSessionHasErrors(['password'], null, 'updatePassword');
+                });
+            });
+
+            describe('Super Admin', function () {
+
+                test('Super Admin can change password', function () {
+                    actingAs($this->superAdmin)
+                        ->post(route('settings.update'), [
+                            'update_password' => true,
+                            'current_password' => 'password',
+                            'password' => 'newpassword',
+                            'password_confirmation' => 'newpassword',
+                        ])
+                        ->assertRedirect(route('settings.index'))
+                        ->assertStatus(302);
+                });
+            });
+
+            describe('Tanent', function () {
+
+                test('Tanent can change password', function () {
+                    actingAs($this->tanent)
+                        ->post(route('settings.update'), [
+                            'update_password' => true,
+                            'current_password' => 'password',
+                            'password' => 'newpassword',
+                            'password_confirmation' => 'newpassword',
+                        ])
+                        ->assertRedirect(route('settings.index'))
+                        ->assertStatus(302);
+                });
+            });
+
+            describe('Expert', function () {
+
+                test('Expert can not change password', function () {
+                    actingAs($this->expert)
+                        ->post(route('settings.update'), [])
+                        ->assertStatus(403);
+                });
+            });
+
+            describe('Client', function () {
+
+                test('Client can not change password', function () {
+                    actingAs($this->client)
+                        ->post(route('settings.update'), [])
+                        ->assertStatus(403);
+                });
+            });
         });
     });
 });

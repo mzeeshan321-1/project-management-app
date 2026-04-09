@@ -15,6 +15,9 @@ class SettingsController extends Controller
      */
     public function index(Request $request): View
     {
+        if (!auth()->user()->hasPermissionTo('manage settings')) {
+            abort(403, 'You do not have permission to view this page.');
+        }
         return view('settings.index', [
             'user' => $request->user(),
         ]);
@@ -25,8 +28,11 @@ class SettingsController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
+        if (!auth()->user()->hasPermissionTo('manage settings')) {
+            abort(403, 'You do not have permission to view this page.');
+        }
         $user = $request->user();
-        
+
         // Handle profile update
         if ($request->has('update_profile')) {
             $validated = $request->validate([
@@ -42,26 +48,26 @@ class SettingsController extends Controller
                 'contact' => 'Contact Number',
                 'address' => 'Address',
             ]);
-            
+
             $user->update($validated);
-            
+
             return redirect()->route('settings.index')->with('status', 'profile-updated');
         }
-        
+
         // Handle password update
         if ($request->has('update_password')) {
             $validated = $request->validateWithBag('updatePassword', [
                 'current_password' => ['required', 'current_password'],
                 'password' => ['required', Password::defaults(), 'confirmed'],
             ]);
-            
+
             $user->update([
                 'password' => Hash::make($validated['password']),
             ]);
-            
+
             return redirect()->route('settings.index')->with('status', 'password-updated');
         }
-        
+
         // Default redirect
         return redirect()->route('settings.index')->with('status', 'settings-updated');
     }
