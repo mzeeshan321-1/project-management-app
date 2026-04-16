@@ -1,9 +1,4 @@
 
-
-https://github.com/user-attachments/assets/3cc7dc90-1818-4895-856b-ccaa327eef37
-
-
-
 # Project Management App
 
 A modern, multi-tenant project management platform for teams and companies to organize projects, tasks, users, and finances.
@@ -130,5 +125,9 @@ Pull requests and suggestions are welcome.
 For bugs or feature requests, please open an issue.
 
 ---
+
+
+https://github.com/user-attachments/assets/32d6d104-f381-4257-8067-dd285ac8fe8f
+
 
 **© 2026 Genixstack. All Rights Reserved.**
