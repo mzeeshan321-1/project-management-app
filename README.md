@@ -1,4 +1,3 @@
-
 # Project Management App
 
 A modern, multi-tenant project management platform for teams and companies to organize projects, tasks, users, and finances.
